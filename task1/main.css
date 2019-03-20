@@ -107,6 +107,37 @@ html {
   text-indent: 2em;
 }
 
+.paragraph-img {
+  max-width: 35%;
+  margin: 30px;
+}
+
+.paragraph-img > img {
+  display: block;
+  margin: 0 auto;
+}
+
+.paragraph-img-caption {
+  display: block;
+  margin: 0;
+  margin-top: 40px;
+  padding: 0;
+
+  font-style: italic;
+  text-align: center;
+  color: #646e74;
+}
+
+.float-left {
+  float: left;
+  margin-left: 0;
+}
+
+.float-right {
+  float: right;
+  margin-right: 0;
+}
+
 .footer {
   padding: 35px;
 
