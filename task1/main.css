@@ -1,0 +1,94 @@
+html {
+  font-size: 18px;
+  font-family: "Roboto Condensed", sans-serif;
+
+  background: url("./assets/bg-image.png") repeat 0 0;
+}
+
+body {
+  width: 80%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-top: 81px;
+
+  background-color: white;
+  box-shadow: 0 0 30px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px 30px;
+
+  color: white;
+
+  background-color: #38876f;
+}
+
+.header-title {
+  display: block;
+  margin: 0;
+  margin-right: 30px;
+  padding: 0;
+
+  color: inherit;
+}
+
+.header-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header-nav-link {
+  position: relative;
+
+  display: inline-block;
+  padding: 10px 25px;
+
+  color: inherit;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.header-nav-link:not(:last-child)::after {
+  content: " ";
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  display: block;
+  width: 1px;
+  height: 100%;
+
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.header-nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.main {
+  padding: 2rem;
+}
+
+.footer {
+  padding: 2rem 2.5rem;
+
+  color: white;
+
+  background-color: #646e74;
+}
+
+.footer-year {
+  float: right;
+}
