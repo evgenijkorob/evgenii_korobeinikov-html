@@ -48,6 +48,8 @@ html {
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
+
+  font-size: 0;
 }
 
 .header-nav-link {
@@ -56,6 +58,7 @@ html {
   display: inline-block;
   padding: 10px 25px;
 
+  font-size: 1rem;
   color: inherit;
   text-transform: uppercase;
   text-decoration: none;
