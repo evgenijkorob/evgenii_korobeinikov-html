@@ -5,7 +5,7 @@ html {
   background: url("./assets/bg-image.png") repeat 0 0;
 }
 
-body {
+.body {
   width: 80%;
   max-width: 1080px;
   margin: 0 auto;
@@ -44,7 +44,8 @@ body {
 
 .header-nav {
   display: flex;
-  flex-wrap: wrap;
+  display: block;
+  flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
 }
@@ -91,4 +92,15 @@ body {
 
 .footer-year {
   float: right;
+}
+
+@media all and (max-width: 830px) {
+  .header-title {
+    margin-bottom: 20px;
+  }
+
+  .body {
+    width: 100%;
+    padding-top: 143px;
+  }
 }
