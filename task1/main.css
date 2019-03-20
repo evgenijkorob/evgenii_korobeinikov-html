@@ -87,6 +87,21 @@ html {
   padding: 35px;
 }
 
+.paragraph-title {
+  padding-bottom: 0.25em;
+
+  color: #38876f;
+  text-transform: capitalize;
+
+  border-bottom: 2px solid #38876f;
+}
+
+.paragraph {
+  font-size: 1.2rem;
+  line-height: 1.4em;
+  text-indent: 2em;
+}
+
 .footer {
   padding: 35px;
 
