@@ -12,7 +12,7 @@ body {
   padding-top: 81px;
 
   background-color: white;
-  box-shadow: 0 0 30px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
 }
 
 .header {
