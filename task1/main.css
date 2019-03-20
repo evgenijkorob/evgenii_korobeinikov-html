@@ -85,7 +85,7 @@ html {
 }
 
 .main {
-  padding: 35px;
+  padding: 35px 50px;
 }
 
 .paragraph-title {
@@ -206,7 +206,7 @@ html {
   float: right;
 }
 
-@media all and (max-width: 866px) {
+@media all and (max-width: 788px) {
   .header-title {
     margin-bottom: 20px;
   }
@@ -214,5 +214,10 @@ html {
   .body {
     width: 100%;
     margin-top: calc(1rem + 20px + 40px + 2rem + 20px);
+  }
+
+  .main {
+    padding-right: 35px;
+    padding-left: 35px;
   }
 }
