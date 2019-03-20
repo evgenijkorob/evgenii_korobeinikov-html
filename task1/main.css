@@ -19,6 +19,7 @@ html {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 999;
 
   display: flex;
   flex-wrap: wrap;
@@ -97,7 +98,7 @@ html {
   border-bottom: 2px solid #38876f;
 }
 
-.paragraph-title:not(:first-child) {
+.article:not(:first-child) {
   margin-top: 50px;
 }
 
@@ -136,6 +137,61 @@ html {
 .float-right {
   float: right;
   margin-right: 0;
+}
+
+.citate-wrapper {
+  position: relative;
+
+  width: 60%;
+  margin: 45px auto;
+  padding: 35px 50px;
+
+  text-align: center;
+
+  border: 2px solid #38876f;
+  border-right-width: 0;
+  border-left-width: 0;
+}
+
+.citate-wrapper::before {
+  content: "\201C";
+  top: -0.4em;
+}
+
+.citate-wrapper::after {
+  content: "\201D";
+  bottom: -0.2em;
+}
+
+.citate-wrapper::before,
+.citate-wrapper::after {
+  position: absolute;
+  left: calc(50% - 0.5em);
+
+  display: block;
+  height: 0.5em;
+  padding: 0 0.25em;
+
+  font-size: 60px;
+  font-family: serif;
+  color: #38876f;
+
+  background-color: white;
+}
+
+.citate {
+  display: block;
+
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
+.citate-author {
+  display: block;
+  margin-top: 15px;
+
+  font-size: 1.3rem;
+  text-align: right;
 }
 
 .footer {
