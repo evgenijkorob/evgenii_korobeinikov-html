@@ -1,6 +1,6 @@
 html {
   font-size: 20px;
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
 
   background: url("./assets/bg-image.png") repeat 0 0;
 }
