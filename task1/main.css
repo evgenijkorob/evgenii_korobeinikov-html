@@ -68,6 +68,8 @@ html {
   color: inherit;
   text-transform: uppercase;
   text-decoration: none;
+
+  transition: all 0.5s;
 }
 
 .header-nav-link:not(:last-child)::after {
