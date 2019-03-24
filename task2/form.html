@@ -5,7 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Task2 - Form - Korobeinikov Evgenii</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="form.css">
+  <link rel="stylesheet" href="../normalize.css">
+  <link rel="stylesheet" href="form.css">
 </head>
 <body>
   <form action="#" method="POST">
@@ -16,7 +17,32 @@
       </p>
       <div>
         <label for="field-label">Field Label</label>
-        <input type="text" id="field-label" placeholder="Form Action">
+        <input type="text" id="field-label" value="Form Action">
+      </div>
+      <div>
+        <label for="type">Choise type</label>
+        <select id="type" size="1" multiple>
+          <option value="radio">Radio Buttons</option>
+          <option value="checkbox">Checkboxes</option>
+          <option value="super">Super Buttons</option>
+        </select>
+      </div>
+      <fieldset>
+        <legend>Choises</legend>
+        <ul>
+          <li>
+            <label for="sub">Subscribe</label>
+            <input type="radio" name="choise" id="sub" checked>
+          </li>
+          <li>
+            <label for="unsub">Unsubscribe</label>
+            <input type="radio" name="choise" id="unsub">
+          </li>
+        </ul>
+      </fieldset>
+      <div>
+        <label for="tag-checkbox">Wrap in paragraph tags?</label>
+        <input type="checkbox" id="tag-checkbox" checked>
       </div>
       <button type="submit">Add to form</button>
     </fieldset>
