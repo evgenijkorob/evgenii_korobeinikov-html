@@ -9,10 +9,13 @@
   <link rel="stylesheet" href="form.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700">
 </head>
-<body>
+<body class="body">
   <form class="form" action="#" method="POST">
     <fieldset class="form-fieldset">
-      <legend class="form-legend">Form Action</legend>
+      <legend class="form-legend">
+        Form Action
+        <span class="form-legend-note">_mc4wp_action</span>
+      </legend>
       <p class="form-note">
         This field will allow your visitors to choose whether they would like to subscribe or unsubscribe
       </p>
@@ -32,18 +35,28 @@
         <legend class="form-radio-legend">Choises</legend>
         <ul class="form-radio-list">
           <li class="form-radio-listitem">
-            <label class="form-radio-label" for="sub">Subscribe</label>
-            <input class="form-radio" type="radio" name="choise" id="sub" checked>
+            <input class="form-radio" type="radio" name="choise" id="sub">
+            <label class="form-radio-label" for="sub">
+              <input class="form-radio-labelinput" type="text" value="Subscribe">
+            </label>
+            <div class="form-radio-reset-wrapper">
+              <button class="form-radio-reset" type="reset">&#x2716;</button>
+            </div>
           </li>
           <li class="form-radio-listitem">
-            <label class="form-radio-label" for="unsub">Unsubscribe</label>
             <input class="form-radio" type="radio" name="choise" id="unsub">
+            <label class="form-radio-label" for="unsub">
+              <input class="form-radio-labelinput" type="text" value="Unsubscribe" id="labelinput2">
+            </label>
+            <div class="form-radio-reset-wrapper">
+              <button class="form-radio-reset" type="reset">&#x2716;</button>
+            </div>
           </li>
         </ul>
       </fieldset>
       <div class="form-input-wrapper">
-        <label class="form-checkbox-label" for="tag-checkbox">Wrap in paragraph tags?</label>
         <input class="form-checkbox" type="checkbox" id="tag-checkbox" checked>
+        <label class="form-checkbox-label" for="tag-checkbox">Wrap in paragraph tags?</label>
       </div>
       <div class="form-input-wrapper">
         <button class="form-submit" type="submit">Add to form</button>
