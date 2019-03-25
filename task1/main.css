@@ -1,5 +1,5 @@
 html {
-  overflow: auto;
+  overflow: hidden;
 
   font-size: 20px;
   font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
