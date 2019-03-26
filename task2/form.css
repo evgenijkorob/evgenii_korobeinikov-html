@@ -164,7 +164,7 @@ fieldset.form-input-wrapper {
 
   background-color: transparent;
   border: 1px solid #ababab;
-  border-radius: 11px;
+  border-radius: 50%;
 }
 
 .form-radio:checked + .form-radio-label::after {
@@ -178,7 +178,7 @@ fieldset.form-input-wrapper {
   height: 10px;
 
   background-color: #3f96c1;
-  border-radius: 5px;
+  border-radius: 50%;
 }
 
 .form-radio-labelinput {
