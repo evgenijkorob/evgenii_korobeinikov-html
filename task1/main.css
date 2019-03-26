@@ -105,7 +105,7 @@ html {
   margin: 30px;
 }
 
-.paragraph-img > img {
+.paragraph-img-wrapper img {
   display: block;
   margin: 0 auto;
 }
