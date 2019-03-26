@@ -32,7 +32,6 @@ html {
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: 20px 30px;
 
   color: white;
 
@@ -41,8 +40,7 @@ html {
 
 .header-title {
   display: block;
-  margin: 0;
-  margin-right: 30px;
+  margin: 20px 30px;
   padding: 0;
 
   line-height: 1em;
@@ -57,6 +55,7 @@ html {
   position: relative;
 
   display: inline-block;
+  margin: 20px 0;
   padding: 10px 25px;
 
   font-size: 1rem;
