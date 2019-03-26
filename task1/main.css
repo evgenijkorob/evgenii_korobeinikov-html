@@ -10,9 +10,8 @@ html {
 .body {
   width: 80%;
   max-width: 1080px;
-  height: calc(100vh - 1rem - 20px - 40px);
+  height: 100vh;
   margin: 0 auto;
-  margin-top: calc(1rem + 20px + 40px);
   overflow-y: auto;
 
   background-color: white;
@@ -22,10 +21,6 @@ html {
 }
 
 .header {
-  position: absolute;
-  top: 0;
-  left: 0;
-
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -207,18 +202,14 @@ html {
   float: right;
 }
 
-@media all and (max-width: 788px) {
-  .header-title {
-    margin-bottom: 20px;
-  }
-
+@media all and (max-width: 1000px) {
   .body {
     width: 100%;
-    margin-top: calc(1rem + 20px + 40px + 2rem + 20px);
+    margin: 0;
   }
 
-  .main {
-    padding-right: 35px;
-    padding-left: 35px;
+  .article {
+    margin-right: 35px;
+    margin-left: 35px;
   }
 }
