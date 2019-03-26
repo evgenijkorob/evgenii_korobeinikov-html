@@ -174,12 +174,10 @@ fieldset.form-input-wrapper {
   left: 6px;
 
   display: block;
-  box-sizing: border-box;
   width: 10px;
   height: 10px;
 
   background-color: #3f96c1;
-  border: 1px solid #3f96c1;
   border-radius: 5px;
 }
 
