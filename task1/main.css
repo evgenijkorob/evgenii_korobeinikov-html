@@ -85,13 +85,9 @@ html {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.main {
-  padding: 35px 50px;
-}
-
 .paragraph-title {
   margin-top: 0;
-  padding-bottom: 0.25em;
+  padding: 0.25em 0;
 
   font-size: 2rem;
   color: #38876f;
@@ -100,8 +96,8 @@ html {
   border-bottom: 2px solid #38876f;
 }
 
-.article:not(:first-child) {
-  margin-top: 50px;
+.article {
+  margin: 50px;
 }
 
 .paragraph {
