@@ -13,7 +13,7 @@ html {
 .form {
   padding: 25px;
 
-  background-color: #fafafa;
+  background-color: white;
 }
 
 .form-fieldset {
@@ -61,7 +61,6 @@ html {
 }
 
 .form-textinput,
-.form-multiple-option,
 .form-radio-labelinput {
   padding: 0.3em;
 
@@ -72,14 +71,52 @@ html {
   box-sizing: border-box;
   width: 100%;
 
-  border: 1px solid #80808040;
+  border: 1px solid #d9d9d9;
 }
 
-.form-multiple,
-.form-multiple:focus {
-  border: 1px solid #80808040;
-  border-radius: 6px;
+.form-multiple-wrapper {
+  display: inline-block;
+  padding: 0.3em;
+
+  background: url("./assets/scroll-buttons.png") no-repeat 130px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+}
+
+.form-multiple {
+  width: 8em;
+  height: 1.5em;
+
+  background-color: transparent;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+.form-multiple::-webkit-scrollbar {
+  width: 15px;
+
+  background-color: transparent;
+}
+
+.form-multiple::-webkit-scrollbar-button {
+  height: 12px;
+
+  background-color: transparent;
+}
+
+.form-multiple {
+  border: 0;
   outline: none;
+
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.form-multiple-option:not(:first-child) {
+  padding-top: 1rem;
 }
 
 fieldset.form-input-wrapper {
@@ -94,7 +131,7 @@ fieldset.form-input-wrapper {
 
   list-style: none;
 
-  border: 1px solid #80808040;
+  border: 1px solid #d9d9d9;
 }
 
 .form-radio-listitem {
@@ -108,24 +145,56 @@ fieldset.form-input-wrapper {
 }
 
 .form-radio {
-  display: block;
-  flex: 0 0 1.3em;
-  height: 1.3em;
-  margin-right: 10px;
+  display: none;
 }
 
 .form-radio-label {
-  width: 100%;
+  position: relative;
+
+  display: flex;
+  flex: 1 auto;
+}
+
+.form-radio-label::before {
+  content: " ";
+  position: relative;
+  top: calc(1em - 10px);
+  left: 0;
+
+  display: inline-block;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+
+  background-color: transparent;
+  border: 1px solid #ababab;
+  border-radius: 11px;
+}
+
+.form-radio:checked + .form-radio-label::after {
+  content: " ";
+  position: absolute;
+  top: calc(1em - 4px);
+  left: 6px;
+
+  display: block;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+
+  background-color: #3f96c1;
+  border: 1px solid #3f96c1;
+  border-radius: 5px;
 }
 
 .form-radio-labelinput {
-  box-sizing: border-box;
-  width: 100%;
+  flex: 1 auto;
 }
 
 .form-radio-reset-wrapper {
   display: block;
-  flex: 0 0 2em;
+  flex: 0 2em;
   height: 2em;
 }
 
@@ -135,7 +204,7 @@ fieldset.form-input-wrapper {
 
   color: gray;
 
-  background: #00000000;
+  background: transparent;
   border: none;
   outline: none;
 
@@ -143,13 +212,45 @@ fieldset.form-input-wrapper {
 }
 
 .form-radio-reset-wrapper:hover {
-  background: #00000014;
+  background: #f6f6f6;
 }
 
 .form-checkbox {
+  display: none;
+}
+
+.form-checkbox-label {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.form-checkbox-label::before {
+  content: " ";
+  position: relative;
+  top: 0;
+  left: 0;
+
   display: inline-block;
-  width: 1.3em;
-  height: 1.3em;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+
+  background-color: transparent;
+  border: 2px solid #dfdfdf;
+}
+
+.form-checkbox:checked + .form-checkbox-label::after {
+  content: "\2714";
+  position: absolute;
+  top: calc(18px - 1em);
+  left: 5px;
+
+  display: inline-block;
+
+  color: #0087bb;
 }
 
 .form-submit {
@@ -158,9 +259,13 @@ fieldset.form-input-wrapper {
   color: white;
 
   background-color: #0087bb;
-  border: 1px solid #00000059;
-  border-radius: 5px;
+  border: none;
+  border-radius: 6px;
   outline: none;
 
   -webkit-appearance: none;
+}
+
+.form-submit:hover {
+  background-color: #13b4f2;
 }

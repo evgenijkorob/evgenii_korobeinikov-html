@@ -25,11 +25,13 @@
       </div>
       <div class="form-input-wrapper">
         <label class="form-multiple-label" for="type">Choise type</label>
-        <select class="form-multiple" id="type" size="1" multiple>
-          <option class="form-multiple-option" value="radio">Radio Buttons</option>
-          <option class="form-multiple-option" value="checkbox">Checkboxes</option>
-          <option class="form-multiple-option" value="super">Super Buttons</option>
-        </select>
+        <div class="form-multiple-wrapper">
+          <select class="form-multiple" id="type" size="1" multiple>
+            <option class="form-multiple-option" value="radio">Radio Buttons</option>
+            <option class="form-multiple-option" value="checkbox">Checkboxes</option>
+            <option class="form-multiple-option" value="super">Super Buttons</option>
+          </select>
+        </div>
       </div>
       <fieldset class="form-input-wrapper">
         <legend class="form-radio-legend">Choises</legend>
@@ -46,7 +48,7 @@
           <li class="form-radio-listitem">
             <input class="form-radio" type="radio" name="choise" id="unsub">
             <label class="form-radio-label" for="unsub">
-              <input class="form-radio-labelinput" type="text" value="Unsubscribe" id="labelinput2">
+              <input class="form-radio-labelinput" type="text" value="Unsubscribe">
             </label>
             <div class="form-radio-reset-wrapper">
               <button class="form-radio-reset" type="reset">&#x2716;</button>
