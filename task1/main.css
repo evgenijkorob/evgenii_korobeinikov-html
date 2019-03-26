@@ -50,12 +50,6 @@ html {
 }
 
 .header-nav {
-  display: flex;
-  display: block;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: center;
-
   font-size: 0;
 }
 
