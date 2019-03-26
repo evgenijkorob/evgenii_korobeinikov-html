@@ -88,9 +88,13 @@ html {
   height: 1.5em;
 
   background-color: transparent;
+  border: 0;
+  outline: none;
+
+  -webkit-appearance: none;
 }
 
-select::-ms-expand {
+.form-multiple::-ms-expand {
   display: none;
 }
 
@@ -104,15 +108,6 @@ select::-ms-expand {
   height: 12px;
 
   background-color: transparent;
-}
-
-.form-multiple {
-  border: 0;
-  outline: none;
-
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
 }
 
 .form-multiple-option:not(:first-child) {
