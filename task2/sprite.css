@@ -121,6 +121,89 @@
   font-family: "Playball", cursive;
 }
 
+.button-container {
+  margin: 9px;
+  padding: 23px 29px;
+
+  font-size: 0;
+
+  border: 1px solid #eaeaea;
+}
+
+.button-container.dark {
+  background-color: #333333;
+}
+
+.button-container-row:not(:first-child) {
+  margin-top: 12px;
+}
+
+.button {
+  margin-right: 3px;
+
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+
+  background: linear-gradient(to bottom, grey, black);
+  border: 0;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.33);
+}
+
+.button.green,
+.button.blue,
+.button.red,
+.button.orange,
+.button.yellow {
+  padding: 4px 7px;
+
+  font-size: 8px;
+}
+
+.button.pink {
+  padding: 2px 7px;
+
+  font-size: 20px;
+
+  background: linear-gradient(to bottom, #e954ab, #e52094);
+}
+
+.button.green {
+  background: linear-gradient(to bottom, #a7cb39, #9cc423);
+}
+
+.button.blue {
+  background: linear-gradient(to bottom, #5b9eea, #3f8fe9);
+}
+
+.button.red {
+  background: linear-gradient(to bottom, #ec5b5b, #e83f3f);
+}
+
+.button.orange {
+  background: linear-gradient(to bottom, #ff823e, #ff6e1a);
+}
+
+.button.yellow {
+  background: linear-gradient(to bottom, #ffc139, #ffbd2f);
+}
+
+.button-container.dark > .button-container-row:not(:first-child) {
+  display: flex;
+  align-items: center;
+}
+
+.button-container.dark .button.blue,
+.button-container.dark .button.yellow,
+.button-container.dark .button.button.orange {
+  padding: 2px 5px;
+}
+
+.button-container.dark .button.orange {
+  font-size: 6px;
+}
+
 .sprite1 {
   width: 48px;
   height: 48px;
