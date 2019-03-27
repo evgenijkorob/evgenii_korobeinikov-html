@@ -85,17 +85,14 @@ html {
 
 .form-multiple {
   width: 8em;
-  height: 1.5em;
+  height: calc(1.5em - 2px);
 
   background-color: transparent;
   border: 0;
   outline: none;
 
   -webkit-appearance: none;
-}
-
-.form-multiple::-ms-expand {
-  display: none;
+  scrollbar-base-color: white;
 }
 
 .form-multiple::-webkit-scrollbar {
@@ -110,8 +107,16 @@ html {
   background-color: transparent;
 }
 
+.form-multiple-option {
+  padding: 0;
+}
+
+.form-multiple-option:first-child {
+  margin: 0 0 1px;
+}
+
 .form-multiple-option:not(:first-child) {
-  padding-top: 1rem;
+  margin: 1rem 0 0;
 }
 
 fieldset.form-input-wrapper {
