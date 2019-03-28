@@ -137,7 +137,6 @@ fieldset.form-input-wrapper {
 
 .form-radio-listitem {
   display: flex;
-  display: -ms-flexbox;
   align-items: center;
 }
 
@@ -192,9 +191,8 @@ fieldset.form-input-wrapper {
 }
 
 .form-radio-reset-wrapper {
-  display: block;
-  flex: 0 2em;
-  height: 2em;
+  flex: 0 2.3em;
+  height: 2.3em;
 }
 
 .form-radio-reset {
