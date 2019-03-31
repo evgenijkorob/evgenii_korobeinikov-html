@@ -10,8 +10,45 @@
 html {
   margin: 0;
   padding: 0;
+
+  font-size: 1.5vw;
 }
 
 * {
   font-family: "Source Sans Pro", sans-serif;
+}
+
+@media (max-width: 1080px) {
+  .-bem-section_home .-bem-section__content {
+    padding: 1.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 1080px) and (orientation: portrait) {
+  html {
+    font-size: 5vw;
+  }
+
+  .-bem-section_home .-bem-section__aside-image-block,
+  .-bem-section_home .-bem-section__content {
+    width: 100%;
+  }
+
+  .-bem-section_home .-bem-section__aside-image-block {
+    height: 50vh;
+  }
+}
+
+@media (max-width: 1080px) and (orientation: landscape) {
+  html {
+    font-size: 3vw;
+  }
+
+  .-bem-section_home .-bem-section__content {
+    width: 50%;
+  }
+
+  .-bem-section_home .-bem-section__aside-image-block {
+    width: 50%;
+  }
 }

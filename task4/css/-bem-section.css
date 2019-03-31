@@ -1,11 +1,10 @@
 .-bem-section {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .-bem-section_home {
   position: relative;
-
-  height: 100vh;
 }
 
 .-bem-section_theme_grey {
@@ -45,7 +44,7 @@
 
 .-bem-section__content {
   box-sizing: border-box;
-  padding: 0 3vw;
+  padding: 0 2rem;
 }
 
 .-bem-section_home .-bem-section__content {
@@ -54,10 +53,11 @@
   justify-content: center;
   align-items: flex-start;
   width: 50%;
+  padding: 10rem 2rem;
 }
 
 .-bem-section_home .-bem-complex-title__subtitle {
-  font-size: 0.9vw;
+  font-size: 0.6rem;
   color: #9b989f;
 }
 
@@ -66,5 +66,5 @@
 }
 
 .-bem-section_home .-bem-button {
-  margin-top: 20px;
+  margin-top: 1.3rem;
 }
