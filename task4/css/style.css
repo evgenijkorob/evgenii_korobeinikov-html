@@ -11,20 +11,20 @@ html {
   margin: 0;
   padding: 0;
 
-  font-size: 1.5vw;
+  font-size: 27px;
 }
 
 * {
   font-family: "Source Sans Pro", sans-serif;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1080px) and (orientation: landscape), (orientation: portrait) {
   .-bem-section_home .-bem-section__content {
     padding: 1.5rem 1.5rem;
   }
 }
 
-@media (max-width: 1080px) and (orientation: portrait) {
+@media (orientation: portrait) {
   html {
     font-size: 5vw;
   }
@@ -35,20 +35,18 @@ html {
   }
 
   .-bem-section_home .-bem-section__aside-image-block {
-    height: 50vh;
+    height: 40vh;
   }
 }
 
-@media (max-width: 1080px) and (orientation: landscape) {
+@media (max-width: 812px) and (orientation: landscape) {
   html {
-    font-size: 3vw;
+    font-size: 18px;
   }
+}
 
-  .-bem-section_home .-bem-section__content {
-    width: 50%;
-  }
-
-  .-bem-section_home .-bem-section__aside-image-block {
-    width: 50%;
+@media (min-width: 1981px) {
+  html {
+    font-size: 1.5vw;
   }
 }

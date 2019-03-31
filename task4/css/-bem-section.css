@@ -31,7 +31,7 @@
   box-sizing: border-box;
 
   background-repeat: no-repeat;
-  background-position: 50%;
+  background-position: center;
 }
 
 .-bem-section_home .-bem-section__aside-image-block {
