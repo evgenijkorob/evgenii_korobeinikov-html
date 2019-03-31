@@ -1,0 +1,15 @@
+.-bem-span_text_bold {
+  font-weight: bolder;
+}
+
+.-bem-span_text_wide {
+  letter-spacing: 0.2em;
+}
+
+.-bem-span_text_uppercase {
+  text-transform: uppercase;
+}
+
+.-bem-span_text_wide-small {
+  letter-spacing: 0.1em;
+}
