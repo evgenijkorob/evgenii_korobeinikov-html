@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Task2 - Form - Korobeinikov Evgenii</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../normalize.css">
+  <link rel="stylesheet" href="form.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700">
+</head>
+<body class="body">
+  <form class="form" action="#" method="POST">
+    <fieldset class="form-fieldset">
+      <legend class="form-legend">
+        Form Action
+        <span class="form-legend-note">_mc4wp_action</span>
+      </legend>
+      <p class="form-note">
+        This field will allow your visitors to choose whether they would like to subscribe or unsubscribe
+      </p>
+      <div class="form-input-wrapper">
+        <label class="form-textinput-label" for="field-label">Field Label</label>
+        <input class="form-textinput" type="text" id="field-label" value="Form Action">
+      </div>
+      <div class="form-input-wrapper">
+        <label class="form-multiple-label" for="type">Choise type</label>
+        <div class="form-multiple-wrapper">
+          <select class="form-multiple" id="type" size="1" multiple>
+            <option class="form-multiple-option" value="radio">Radio Buttons</option>
+            <option class="form-multiple-option" value="checkbox">Checkboxes</option>
+            <option class="form-multiple-option" value="super">Super Buttons</option>
+          </select>
+        </div>
+      </div>
+      <fieldset class="form-input-wrapper">
+        <legend class="form-radio-legend">Choises</legend>
+        <ul class="form-radio-list">
+          <li class="form-radio-listitem">
+            <input class="form-radio" type="radio" name="choise" id="sub">
+            <label class="form-radio-label" for="sub">
+              <input class="form-radio-labelinput" type="text" value="Subscribe">
+            </label>
+            <div class="form-radio-reset-wrapper">
+              <button class="form-radio-reset" type="reset">&#x2716;</button>
+            </div>
+          </li>
+          <li class="form-radio-listitem">
+            <input class="form-radio" type="radio" name="choise" id="unsub">
+            <label class="form-radio-label" for="unsub">
+              <input class="form-radio-labelinput" type="text" value="Unsubscribe">
+            </label>
+            <div class="form-radio-reset-wrapper">
+              <button class="form-radio-reset" type="reset">&#x2716;</button>
+            </div>
+          </li>
+        </ul>
+      </fieldset>
+      <div class="form-input-wrapper">
+        <input class="form-checkbox" type="checkbox" id="tag-checkbox" checked>
+        <label class="form-checkbox-label" for="tag-checkbox">Wrap in paragraph tags?</label>
+      </div>
+      <div class="form-input-wrapper">
+        <button class="form-submit" type="submit">Add to form</button>
+      </div>
+    </fieldset>
+  </form>
+</body>
+</html>
