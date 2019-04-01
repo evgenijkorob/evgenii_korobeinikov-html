@@ -1,0 +1,36 @@
+.-bem-progress-bar {
+  width: 100%;
+}
+
+.-bem-progress-bar__label {
+  display: flex;
+  justify-content: space-between;
+}
+
+.-bem-progress-bar__bar {
+  width: 100%;
+  height: 0.2rem;
+
+  background-color: white;
+}
+
+.-bem-progress-bar__bar::before {
+  content: "";
+
+  display: block;
+  height: 100%;
+
+  background-color: black;
+}
+
+.-bem-progress-bar__bar_70::before {
+  width: 70%;
+}
+
+.-bem-progress-bar__bar_80::before {
+  width: 80%;
+}
+
+.-bem-progress-bar__bar_90::before {
+  width: 90%;
+}
