@@ -1,50 +1,12 @@
-.-bem-section {
+.-bem-section__inner {
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
+  box-sizing: border-box;
+  height: 100%;
 }
 
-.-bem-section_home {
+.-bem-section__inner_home {
   position: relative;
-
-  justify-content: center;
-}
-
-.-bem-section_columns_all {
-  width: 100%;
-}
-
-.-bem-section_columns_two {
-  width: 50%;
-}
-
-.-bem-section_columns_one {
-  width: 25%;
-}
-
-.-bem-section_theme_grey {
-  background-color: #f0e2d7;
-}
-
-.-bem-section_theme_white {
-  background-color: #ffffff;
-}
-
-.-bem-section_theme_gold {
-  color: white;
-
-  background-color: #e4ae58;
-}
-
-.-bem-section_theme_orange {
-  color: white;
-
-  background-color: #e9714c;
-}
-
-.-bem-section_theme_black {
-  color: white;
-
-  background-color: #161616;
 }
 
 .-bem-section__aside-image-block {
@@ -65,6 +27,10 @@
   background-image: url("../assets/images/about-img.jpg");
 }
 
+.-bem-section__aside-image-block_experiences {
+  background-image: url("../assets/images/experience-img.jpg");
+}
+
 .-bem-section__content {
   display: flex;
   flex-direction: column;
@@ -78,27 +44,34 @@
   width: 100%;
 }
 
-.-bem-section_home .-bem-section__content {
+.-bem-section__content_home {
   padding: 10rem 2rem;
 }
 
-.-bem-section_home .-bem-complex-title__subtitle {
-  font-size: 0.6rem;
-  color: #9b989f;
-}
-
-.-bem-section_theme_grey .-bem-paragraph {
-  color: #9b989f;
-}
-
-.-bem-section_home .-bem-button {
-  margin-top: 1.3rem;
-}
-
-.-bem-section_iconized .-bem-section__content {
-  flex-flow: column nowrap;
+.-bem-section__content_iconized {
   justify-content: center;
   align-items: center;
+  padding: 2.5rem 1.2rem;
 
   text-align: center;
+}
+
+.-bem-section__content-element {
+  width: 100%;
+}
+
+.-bem-section__paragraph {
+  margin: 1rem 0 0;
+}
+
+.-bem-section__home-button {
+  margin-top: 1rem;
+}
+
+.-bem-section__list {
+  margin: 1rem 0;
+}
+
+.-bem-section__icon {
+  margin-bottom: 2rem;
 }

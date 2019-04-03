@@ -1,7 +1,7 @@
-.-bem-list {
+.-bem-list__inner {
   display: flex;
   flex-flow: column nowrap;
-  width: 100%;
+  margin: 0;
   padding: 0;
 
   list-style: none;

@@ -1,19 +1,19 @@
 @import url("/normalize.css");
+@import url("./-bem-page.css");
 @import url("./-bem-section.css");
-@import url("./-bem-site-logo.css");
 @import url("./-bem-complex-title.css");
-@import url("./-bem-paragraph.css");
 @import url("./-bem-button.css");
 @import url("./-bem-list.css");
 @import url("./-bem-progress-bar.css");
-@import url("./-bem-title.css");
 @import url("./-bem-icon.css");
-@import url("./-bem-span.css");
+@import url("./-bem-text.css");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
 @import url("./brands.css");
 @import url("./font-awesome.css");
 
-html {
+html,
+h1,
+h2 {
   margin: 0;
   padding: 0;
 }
@@ -22,6 +22,7 @@ html {
   font-family: "Source Sans Pro", sans-serif;
 }
 
+/*
 @media (max-width: 1024px) and (orientation: landscape), (orientation: portrait) {
   .-bem-section_home .-bem-section__content {
     padding: 1.5rem 1.5rem;
@@ -55,7 +56,7 @@ html {
     padding: 1.5rem 1.5rem;
   }
 }
-
+*/
 @media (orientation: portrait) {
   html {
     font-size: 30px;
