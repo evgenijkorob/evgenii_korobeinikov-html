@@ -28,29 +28,26 @@ h2 {
     padding: 1.5rem 1.5rem;
   }
 }
-
+*/
 @media (orientation: portrait) {
-  .-bem-section_columns_two {
+  .-bem-page__element_medium {
     width: 100%;
   }
 
-  .-bem-section_columns_one {
+  .-bem-page__element_small {
     width: 100%;
   }
 
   .-bem-section__aside-image-block {
+    width: 100%;
     height: 50vh;
   }
 
   .-bem-section__content {
     width: 100%;
   }
-
-  .-bem-section__aside-image-block {
-    width: 100%;
-  }
 }
-
+/*
 @media (max-width: 480px) and (orientation: portrait) {
   .-bem-section_home .-bem-section__content {
     padding: 1.5rem 1.5rem;

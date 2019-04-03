@@ -50,6 +50,10 @@
   color: #9b989f;
 }
 
+.-bem-page__element_theme_light .-bem-complex-title__subtitle {
+  color: #e4ae58;
+}
+
 .-bem-page__site-logo {
   position: absolute;
   top: 4%;

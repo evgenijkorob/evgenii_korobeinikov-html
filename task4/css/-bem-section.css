@@ -5,7 +5,7 @@
   height: 100%;
 }
 
-.-bem-section__inner_home {
+.-bem-section__inner_relative {
   position: relative;
 }
 
@@ -31,6 +31,10 @@
   background-image: url("../assets/images/experience-img.jpg");
 }
 
+.-bem-section__aside-image-block_education {
+  background-image: url("../assets/images/education-img.jpg");
+}
+
 .-bem-section__content {
   display: flex;
   flex-direction: column;
@@ -51,7 +55,7 @@
 .-bem-section__content_iconized {
   justify-content: center;
   align-items: center;
-  padding: 2.5rem 1.2rem;
+  padding: 2.5rem 1.5rem;
 
   text-align: center;
 }
@@ -61,17 +65,47 @@
 }
 
 .-bem-section__paragraph {
-  margin: 1rem 0 0;
+  margin: 0.4rem 0;
 }
 
 .-bem-section__home-button {
   margin-top: 1rem;
 }
 
-.-bem-section__list {
+.-bem-section__progress-list {
   margin: 1rem 0;
 }
 
 .-bem-section__icon {
   margin-bottom: 2rem;
+}
+
+.-bem-section__list {
+  margin: 1rem 0;
+}
+
+.-bem-section__inner_citate {
+  background: url("../assets/images/quotes-bg.jpg") no-repeat center;
+  background-size: cover;
+}
+
+.-bem-section__citate-wrapper {
+  padding: 6rem 13rem 5rem;
+
+  background: rgba(0,0,0,0.6);
+}
+
+.-bem-section__citate-wrapper .-bem-section__icon {
+  font-size: 1.8rem;
+  color: white;
+}
+
+.-bem-section__citate {
+  color: white;
+}
+
+.-bem-section__subcitate {
+  margin-top: 2rem;
+
+  color: #9b989f;
 }
