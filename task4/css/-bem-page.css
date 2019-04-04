@@ -1,5 +1,7 @@
 .-bem-page {
   margin: 0;
+
+  scroll-behavior: smooth;
 }
 
 .-bem-page__flex-container {

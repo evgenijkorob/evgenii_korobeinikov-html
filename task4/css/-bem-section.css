@@ -61,6 +61,7 @@
 }
 
 .-bem-section__content-element {
+  box-sizing: border-box;
   width: 100%;
 }
 
