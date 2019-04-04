@@ -23,6 +23,64 @@ h2 {
   font-family: "Source Sans Pro", sans-serif;
 }
 
+.-bem-section__home-button {
+  transition: background-color 0.3s;
+}
+
+.-bem-section__home-button .-bem-button__inner {
+  transition: color 0.3s;
+}
+
+.-bem-section__home-button:hover {
+  background: #161616;
+}
+
+.-bem-section__home-button:hover .-bem-button__inner {
+  color: #f0e2d7;
+}
+
+.-bem-section__home-button:active .-bem-button__inner {
+  text-decoration-line: underline;
+}
+
+.-bem-form__submit:hover {
+  color: white;
+
+  background: rgba(0, 0, 0, 0);
+}
+
+.-bem-form__submit:active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.-bem-section__social-icon {
+  transition-duration: 0.5s;
+  transition-property: color, background-color;
+}
+
+.-bem-section__social-icon:hover {
+  color: white;
+
+  background: #9b989f;
+}
+
+.-bem-section__social-icon:active {
+  outline: white solid 0.08rem;
+  outline-offset: -0.2rem;
+}
+
+.-bem-section__citate-wrapper .-bem-section__icon {
+  transition: color 0.4s;
+}
+
+.-bem-section__citate-wrapper .-bem-section__icon:hover {
+  color: #fff236;
+}
+
+.-bem-section__copyright .-bem-text_link:hover {
+  text-decoration-line: underline;
+}
+
 /*
 @media (max-width: 1024px) and (orientation: landscape), (orientation: portrait) {
   .-bem-section_home .-bem-section__content {

@@ -43,7 +43,7 @@
   margin-top: 0.5rem;
   padding: 0.4rem 6rem;
 
-  border: none;
+  border: 0.1rem solid white;
   outline: none;
 }
 

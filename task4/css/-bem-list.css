@@ -7,6 +7,10 @@
   list-style: none;
 }
 
+.-bem-list__inner_row {
+  flex-direction: row;
+}
+
 .-bem-list__item-container {
   display: flex;
   flex-flow: row nowrap;

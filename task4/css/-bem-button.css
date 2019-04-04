@@ -1,9 +1,15 @@
+.-bem-button {
+  padding: 0;
+
+  outline: none;
+}
+
 .-bem-button_rounded {
   border-radius: 3rem;
 }
 
 .-bem-button_heavy {
-  border: 0.1rem solid black;
+  border: 0.1rem solid #161616;
 }
 
 .-bem-button__inner {
