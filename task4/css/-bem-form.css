@@ -1,3 +1,8 @@
+.-bem-form__fieldset {
+  margin: 0;
+  padding: 0;
+}
+
 .-bem-form__input-container {
   padding: 0.8rem 0;
 }
@@ -20,10 +25,14 @@
 
 .-bem-form_theme_elegance .-bem-form__input {
   background: transparent;
-  border-width: 0 0 0.05rem 0;
+  border-width: 0 0 0.08rem 0;
   border-style: solid;
   border-color: rgba(255, 255, 255, 0.3);
   outline: none;
+}
+
+.-bem-form_theme_elegance .-bem-form__input:focus {
+  border-color: white;
 }
 
 .-bem-form__input_spaced {

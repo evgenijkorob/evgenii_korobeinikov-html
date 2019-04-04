@@ -35,6 +35,10 @@
   background-image: url("../assets/images/education-img.jpg");
 }
 
+.-bem-section__aside-image-block_contacts {
+  background-image: url("../assets/images/contact-img.jpg");
+}
+
 .-bem-section__content {
   display: flex;
   flex-direction: column;
@@ -85,6 +89,20 @@
   margin: 1rem 0;
 }
 
+.-bem-section__list-item {
+  margin-bottom: 1rem;
+}
+
+.-bem-section__testimonial-icon {
+  margin: 0.3rem 1rem 0 0;
+
+  font-size: 1.3rem;
+}
+
+.-bem-section__contact-icon {
+  margin-right: 0.6rem;
+}
+
 .-bem-section__inner_citate {
   background: url("../assets/images/quotes-bg.jpg") no-repeat center;
   background-size: cover;
@@ -98,15 +116,16 @@
 
 .-bem-section__citate-wrapper .-bem-section__icon {
   font-size: 1.8rem;
-  color: white;
-}
-
-.-bem-section__citate {
-  color: white;
 }
 
 .-bem-section__subcitate {
   margin-top: 2rem;
+}
 
-  color: #9b989f;
+.-bem-section__contact-wrapper {
+  margin-bottom: 1.7rem;
+}
+
+.-bem-section__contact-title {
+  margin-bottom: 1rem;
 }
