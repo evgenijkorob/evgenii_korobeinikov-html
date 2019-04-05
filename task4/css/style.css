@@ -1,22 +1,27 @@
 @import url("/normalize.css");
+@import url("./font-awesome.css");
+@import url("./-bem-list.css");
 @import url("./-bem-page.css");
 @import url("./-bem-section.css");
 @import url("./-bem-complex-title.css");
 @import url("./-bem-button.css");
-@import url("./-bem-list.css");
+
 @import url("./-bem-progress-bar.css");
 @import url("./-bem-icon.css");
 @import url("./-bem-text.css");
 @import url("./-bem-form.css");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
 @import url("./brands.css");
-@import url("./font-awesome.css");
 
 html,
 h1,
 h2 {
   margin: 0;
   padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 * {
@@ -81,14 +86,20 @@ h2 {
   text-decoration-line: underline;
 }
 
-/*
-@media (max-width: 1024px) and (orientation: landscape), (orientation: portrait) {
-  .-bem-section_home .-bem-section__content {
-    padding: 1.5rem 1.5rem;
+@media (max-width: 767px) and (orientation: portrait) {
+  .-bem-section__content,
+  .-bem-section__content_home {
+    padding: 1rem;
   }
-}
-*/
-@media (orientation: portrait) {
+
+  .-bem-section__thumbnail {
+    padding: 1.5rem 3rem;
+  }
+
+  .-bem-section__citate-wrapper {
+    padding: 1rem 2rem;
+  }
+
   .-bem-page__element_medium {
     width: 100%;
   }
@@ -99,41 +110,60 @@ h2 {
 
   .-bem-section__aside-image-block {
     width: 100%;
-    height: 50vh;
+    height: 40vh;
   }
 
   .-bem-section__content {
     width: 100%;
   }
 }
-/*
-@media (max-width: 480px) and (orientation: portrait) {
-  .-bem-section_home .-bem-section__content {
-    padding: 1.5rem 1.5rem;
+
+@media (orientation: landscape) and (max-width: 1250px), (orientation: portrait) and (min-width: 768px) {
+  .-bem-page__element_medium {
+    width: 100%;
   }
-}
-*/
-@media (orientation: portrait) {
-  html {
-    font-size: 30px;
+
+  .-bem-page__element_small {
+    width: 50%;
+  }
+
+  .-bem-page__element_big .-bem-section__aside-image-block {
+    width: 100%;
+    height: 50vw;
+  }
+
+  .-bem-page__element_big .-bem-section__content {
+    width: 100%;
+  }
+
+  .-bem-section__content_home {
+    padding: 4rem 1.5rem 2rem;
+  }
+
+  .-bem-section__thumbnail {
+    padding: 1.5rem 2rem;
+  }
+
+  .-bem-section__citate-wrapper {
+    padding: 2rem 3rem;
   }
 }
 
-@media (max-width: 812px) and (orientation: landscape) {
+@media (max-width: 449px) {
   html {
     font-size: 18px;
   }
 }
 
-@media (max-width: 1024px) and (orientation: landscape) {
+@media (min-width: 450px) and (max-width: 1080px) {
   html {
-    font-size: 25px;
+    font-size: 23px;
   }
 }
 
-@media (max-width: 1823px) and (orientation: landscape) {
+@media (min-width: 1025px) and (max-width: 1823px) {
   html {
-    font-size: 28px;
+    font-size: 26px;
   }
 }
 

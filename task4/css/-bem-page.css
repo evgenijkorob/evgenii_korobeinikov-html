@@ -1,7 +1,5 @@
 .-bem-page {
   margin: 0;
-
-  scroll-behavior: smooth;
 }
 
 .-bem-page__flex-container {
@@ -56,8 +54,118 @@
   color: #e4ae58;
 }
 
+.-bem-page__header-menu-wrapper {
+  position: absolute;
+
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1.4rem 7rem;
+}
+
 .-bem-page__site-logo {
   position: absolute;
-  top: 4%;
+  top: 1.4rem;
   left: 11%;
+}
+
+.-bem-page__header-menu {
+  position: absolute;
+  top: 1.4rem;
+  left: calc(50vw + 4rem);
+}
+
+.-bem-page__header-menu-toggle {
+  display: none;
+}
+
+.-bem-page__header-menu-button {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.4rem;
+  z-index: 5001;
+
+  display: none;
+}
+
+.-bem-page__header-menu-list {
+  flex-flow: row wrap;
+}
+
+.-bem-page__header-menu-item {
+  margin: 0 1.5rem 1rem 0;
+}
+
+@media (orientation: portrait), (orientation: landscape) and (max-width: 1250px) {
+  html {
+    overflow-x: hidden;
+  }
+
+  .-bem-page {
+    overflow-x: hidden;
+  }
+
+  .-bem-page__header-menu {
+    position: absolute;
+    top: 0;
+    right: -100vw;
+    left: unset;
+    z-index: 5000;
+
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    width: auto;
+    height: 100vh;
+    padding: 4rem 4rem;
+    overflow-y: auto;
+
+    background: rgba(22, 22, 22, 0.93);
+
+    transition: right 0.4s ease-in-out;
+  }
+
+  .-bem-page__site-logo,
+  .-bem-page__header-menu-button {
+    transition: color 0.4s ease-in-out;
+  }
+
+  .-bem-page__site-logo {
+    position: absolute;
+    top: 1.4rem;
+    left: 1.4rem;
+    z-index: 5001;
+  }
+
+  .-bem-page__header-menu-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .-bem-page__header-menu-item {
+    margin: 1.2rem 0;
+  }
+
+  .-bem-page__header-menu-item .-bem-text {
+    font-size: 1.2rem;
+    color: white;
+  }
+
+  .-bem-page__header-menu-button {
+    display: block;
+  }
+
+  .-bem-page__header-menu-toggle:checked ~ .-bem-page__site-logo,
+  .-bem-page__header-menu-toggle:checked ~ .-bem-page__header-menu-button {
+    color: white;
+  }
+
+  .-bem-page__header-menu-toggle:checked ~ .-bem-page__header-menu-button {
+    position: fixed;
+  }
+
+  .-bem-page__header-menu-toggle:checked ~ .-bem-page__header-menu {
+    position: fixed;
+    right: 0;
+  }
 }

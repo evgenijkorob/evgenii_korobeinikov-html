@@ -13,8 +13,47 @@
   <div class="-bem-page__flex-container">
     <header id="home" class="-bem-section -bem-page__element -bem-page__element_big -bem-page__element_theme_human">
       <div class="-bem-section__inner -bem-section__inner_relative">
-        <div class="-bem-text -bem-page__site-logo -bem-text_logo -bem-text_bold -bem-text_dark">
-          Stimulus
+
+        <div class="-bem-page__header-menu-wrapper">
+          <input type="checkbox" id="menu-toggle" class="-bem-page__header-menu-toggle">
+          <label for="menu-toggle" class="-bem-page__header-menu-button -bem-text -bem-text_x-big fas fa-bars"></label>
+
+          <div class="-bem-text -bem-page__site-logo -bem-text_logo -bem-text_bold -bem-text_dark">
+            Stimulus
+          </div>
+
+          <nav class="-bem-list -bem-page__header-menu">
+            <ul class="-bem-list__inner -bem-page__header-menu-list">
+              <li class="-bem-list__item -bem-page__header-menu-item">
+                <a href="#home" class="-bem-text -bem-text_link -bem-text_gray -bem-text_medium -bem-text_uppercase -bem-text_normal">
+                  home
+                </a>
+              </li>
+              <li class="-bem-list__item -bem-page__header-menu-item">
+                <a href="#about" class="-bem-text -bem-text_link -bem-text_gray -bem-text_medium -bem-text_uppercase -bem-text_normal">
+                  about me
+                </a>
+              </li>
+              <li class="-bem-list__item -bem-page__header-menu-item">
+                <a href="#experiences"
+                  class="-bem-text -bem-text_link -bem-text_gray -bem-text_medium -bem-text_uppercase -bem-text_normal">
+                  experiences
+                </a>
+              </li>
+              <li class="-bem-list__item -bem-page__header-menu-item">
+                <a href="#testimonial"
+                  class="-bem-text -bem-text_link -bem-text_gray -bem-text_medium -bem-text_uppercase -bem-text_normal">
+                  testimonial
+                </a>
+              </li>
+              <li class="-bem-list__item -bem-page__header-menu-item">
+                <a href="#contact"
+                  class="-bem-text -bem-text_link -bem-text_gray -bem-text_medium -bem-text_uppercase -bem-text_normal">
+                  contact
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
 
         <div class="-bem-section__aside-image-block -bem-section__aside-image-block_home"></div>
@@ -152,7 +191,8 @@
     </section>
 
     <section class="-bem-section -bem-page__element -bem-page__element_small -bem-page__element_theme_gold">
-      <div class="-bem-section__content -bem-section__content_only -bem-section__content_centering">
+      <div
+        class="-bem-section__content -bem-section__content_only -bem-section__content_centering -bem-section__thumbnail">
         <span class="-bem-text -bem-section__icon fas fa-desktop -bem-text_big"></span>
         <h1 class="-bem-text -bem-text_normal -bem-text_x-big">Interface Design</h1>
         <p
@@ -163,7 +203,8 @@
     </section>
 
     <section class="-bem-section -bem-page__element -bem-page__element_small -bem-page__element_theme_orange">
-      <div class="-bem-section__content -bem-section__content_only -bem-section__content_centering">
+      <div
+        class="-bem-section__content -bem-section__content_only -bem-section__content_centering -bem-section__thumbnail">
         <span class="-bem-text -bem-section__icon fab fa-telegram-plane -bem-text_big"></span>
         <h1 class="-bem-text -bem-text_normal -bem-text_x-big">Media Strategy</h1>
         <p
@@ -174,7 +215,8 @@
     </section>
 
     <section class="-bem-section -bem-page__element -bem-page__element_small -bem-page__element_theme_darkness">
-      <div class="-bem-section__content -bem-section__content_only -bem-section__content_centering">
+      <div
+        class="-bem-section__content -bem-section__content_only -bem-section__content_centering -bem-section__thumbnail">
         <span class="-bem-text -bem-section__icon fas fa-table -bem-text_big"></span>
         <h1 class="-bem-text -bem-text_normal -bem-text_x-big">Mobile App</h1>
         <p
@@ -185,7 +227,8 @@
     </section>
 
     <section class="-bem-section -bem-page__element -bem-page__element_small -bem-page__element_theme_light">
-      <div class="-bem-section__content -bem-section__content_only -bem-section__content_centering">
+      <div
+        class="-bem-section__content -bem-section__content_only -bem-section__content_centering -bem-section__thumbnail">
         <span class="-bem-text -bem-section__icon fab fa-html5 -bem-text_big"></span>
         <h1 class="-bem-text -bem-text_normal -bem-text_x-big">Coding</h1>
         <p
@@ -195,12 +238,11 @@
       </div>
     </section>
 
-    <section id="experiences"
-      class="-bem-section -bem-page__element -bem-page__element_big -bem-page__element_theme_orange">
+    <section class="-bem-section -bem-page__element -bem-page__element_big -bem-page__element_theme_orange">
       <div class="-bem-section__inner">
         <div class="-bem-section__aside-image-block -bem-section__aside-image-block_experiences"></div>
 
-        <div class="-bem-section__content">
+        <div id="experiences" class="-bem-section__content">
           <div class="-bem-complex-title -bem-section__content-element">
             <div class="-bem-complex-title__inner">
               <h1 class="-bem-complex-title__title -bem-text -bem-text_big -bem-text_lite">
@@ -433,31 +475,36 @@
         <div class="-bem-list">
           <ul class="-bem-list__inner -bem-list__inner_row">
             <li class="-bem-list__item">
-              <a href="https://facebook.com" class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
+              <a href="https://facebook.com"
+                class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
                 target="_blank">
                 <span class="fab fa-facebook-f"></span>
               </a>
             </li>
             <li class="-bem-list__item">
-              <a href="https://twitter.com" class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
+              <a href="https://twitter.com"
+                class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
                 target="_blank">
                 <span class="fab fa-twitter"></span>
               </a>
             </li>
             <li class="-bem-list__item">
-              <a href="https://plus.google.com" class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
+              <a href="https://plus.google.com"
+                class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
                 target="_blank">
                 <span class="fab fa-google-plus-g"></span>
               </a>
             </li>
             <li class="-bem-list__item">
-              <a href="https://dribbble.com" class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
+              <a href="https://dribbble.com"
+                class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
                 target="_blank">
                 <span class="fab fa-dribbble"></span>
               </a>
             </li>
             <li class="-bem-list__item">
-              <a href="https://linkedin.com" class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
+              <a href="https://linkedin.com"
+                class="-bem-text -bem-section__social-icon -bem-text_link -bem-text_medium -bem-text_gray"
                 target="_blank">
                 <span class="fab fa-linkedin-in"></span>
               </a>

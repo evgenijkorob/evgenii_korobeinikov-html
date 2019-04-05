@@ -148,3 +148,7 @@
 
   outline: none;
 }
+
+.-bem-section__thumbnail {
+  padding: 1rem 1rem;
+}
