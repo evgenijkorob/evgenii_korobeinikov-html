@@ -6,11 +6,9 @@
 @import url("./-bem-complex-title.css");
 @import url("./-bem-button.css");
 @import url("./-bem-progress-bar.css");
-@import url("./-bem-icon.css");
 @import url("./-bem-text.css");
 @import url("./-bem-form.css");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
-@import url("./brands.css");
 
 html,
 h1,
@@ -25,6 +23,16 @@ html {
 
 * {
   font-family: "Source Sans Pro", sans-serif;
+}
+
+#interface,
+#interface ~ * {
+  order: 1;
+}
+
+#testimonial,
+#testimonial ~ * {
+  order: 2;
 }
 
 .-bem-section__home-button {
@@ -114,6 +122,14 @@ html {
 
   .-bem-section__content {
     width: 100%;
+  }
+
+  #interface + * {
+    order: 0;
+  }
+
+  #testimonial + * {
+    order: 1;
   }
 }
 

@@ -58,9 +58,9 @@
   position: absolute;
   top: 0;
   right: 0;
+  left: 50vw;
 
   box-sizing: border-box;
-  width: 50%;
   padding: 1.4rem 0 0 4rem;
 }
 
@@ -68,13 +68,7 @@
   position: absolute;
   left: calc(-50vw + 7rem);
 }
-/*
-.-bem-page__header-menu {
-  position: absolute;
-  top: 1.4rem;
-  left: calc(50vw + 4rem);
-}
-*/
+
 .-bem-page__header-menu-toggle {
   display: none;
 }
@@ -102,11 +96,11 @@
   }
 
   .-bem-page__header-menu-wrapper {
-    width: 100%;
+    left: 0;
   }
 
   .-bem-page__header-menu {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: -100vw;
     z-index: 5000;
@@ -165,7 +159,6 @@
   }
 
   .-bem-page__header-menu-toggle:checked ~ .-bem-page__header-menu {
-    position: fixed;
     right: 0;
   }
 }
