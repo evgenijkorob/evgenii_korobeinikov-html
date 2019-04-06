@@ -53,4 +53,6 @@
 
 .-bem-form__textarea {
   overflow: auto;
+
+  resize: vertical;
 }
