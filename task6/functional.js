@@ -47,7 +47,7 @@ function FStackOfPaper(manufacturer, pageAmount) {
 }
 
 function FNotebook(manufacturer, pageAmount, isFastened) {
-  FStackOfPaper.call(this, manufacturer, pageAmount);
+  FStackOfPaper.apply(this, arguments);
   this.isFastened = isFastened;
 
   let parentDropOnFloor = this.dropOnFloor;
@@ -59,7 +59,7 @@ function FNotebook(manufacturer, pageAmount, isFastened) {
       }
       else {
         this.isFastened = false;
-        console.log('This notebook is not fastened anymore!');
+        console.log('From now on this notebook is not fastened!');
       }
     }
 
