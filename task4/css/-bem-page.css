@@ -126,7 +126,6 @@
     width: auto;
     height: 100vh;
     padding: 4rem 4rem;
-    overflow-y: auto;
 
     background: rgba(22, 22, 22, 0.93);
 
@@ -188,5 +187,16 @@
 
   .-bem-page__header-menu-toggle:checked ~ .-bem-page__header-menu {
     right: 0;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .-bem-page__header-menu {
+    padding-top: 8vh;
+  }
+
+  .-bem-page__header-menu-item {
+    margin: 1.5vh 0;
+    padding: 2.5vh 1rem;
   }
 }
