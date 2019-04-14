@@ -1,0 +1,75 @@
+.-bem-text_logo {
+  font-size: 1.1rem;
+}
+
+.-bem-text_paragraph {
+  line-height: 1.9em;
+}
+
+.-bem-text_big {
+  font-size: 2rem;
+}
+
+.-bem-text_x-big {
+  font-size: 1.2rem;
+}
+
+.-bem-text_xx-big {
+  font-size: 0.8rem;
+}
+
+.-bem-text_small {
+  font-size: 0.6rem;
+}
+
+.-bem-text_medium {
+  font-size: 0.7rem;
+}
+
+.-bem-text_lite {
+  font-weight: 300;
+}
+
+.-bem-text_bold {
+  font-weight: bolder;
+}
+
+.-bem-text_normal {
+  font-weight: normal;
+}
+
+.-bem-text_wide {
+  letter-spacing: 0.2em;
+}
+
+.-bem-text_wide-small {
+  letter-spacing: 0.1em;
+}
+
+.-bem-text_uppercase {
+  text-transform: uppercase;
+}
+
+.-bem-text_transparent {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.-bem-text_dark {
+  color: #161616;
+}
+
+.-bem-text_light {
+  color: white;
+}
+
+.-bem-text_gray {
+  color: #9b989f;
+}
+
+.-bem-text_gold {
+  color: #e4ae58;
+}
+
+.-bem-text_link {
+  text-decoration: none;
+}

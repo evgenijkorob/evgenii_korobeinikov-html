@@ -1,0 +1,154 @@
+.-bem-section__inner {
+  display: flex;
+  flex-flow: row wrap;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.-bem-section__inner_relative {
+  position: relative;
+}
+
+.-bem-section__aside-image-block {
+  align-self: stretch;
+  box-sizing: border-box;
+  width: 50%;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.-bem-section__aside-image-block_home {
+  background-image: url("../assets/images/home-img.jpg");
+}
+
+.-bem-section__aside-image-block_skills {
+  background-image: url("../assets/images/about-img.jpg");
+}
+
+.-bem-section__aside-image-block_experiences {
+  background-image: url("../assets/images/experience-img.jpg");
+}
+
+.-bem-section__aside-image-block_education {
+  background-image: url("../assets/images/education-img.jpg");
+}
+
+.-bem-section__aside-image-block_contacts {
+  background-image: url("../assets/images/contact-img.jpg");
+}
+
+.-bem-section__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+  width: 50%;
+  padding: 2rem 1.5rem;
+}
+
+.-bem-section__content_only {
+  width: 100%;
+}
+
+.-bem-section__content_home {
+  padding: 10rem 2rem;
+}
+
+.-bem-section__content_centering {
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.-bem-section__content-element {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.-bem-section__paragraph {
+  margin: 0.4rem 0;
+}
+
+.-bem-section__home-button {
+  margin-top: 1rem;
+}
+
+.-bem-section__progress-list {
+  margin: 1rem 0;
+}
+
+.-bem-section__icon {
+  margin: 1.5rem 0 1.8rem;
+}
+
+.-bem-section__list {
+  margin: 1rem 0;
+}
+
+.-bem-section__list-item {
+  margin-bottom: 1rem;
+}
+
+.-bem-section__testimonial-icon {
+  margin: 0.3rem 1rem 0 0;
+
+  font-size: 1.3rem;
+}
+
+.-bem-section__contact-icon {
+  margin-right: 0.6rem;
+}
+
+.-bem-section__inner_citate {
+  background: url("../assets/images/quotes-bg.jpg") no-repeat center;
+  background-size: cover;
+}
+
+.-bem-section__citate-wrapper {
+  padding: 6rem 13rem 5rem;
+
+  background: rgba(0,0,0,0.6);
+}
+
+.-bem-section__citate-icon {
+  font-size: 1.8rem;
+}
+
+.-bem-section__subcitate {
+  margin-top: 2rem;
+}
+
+.-bem-section__contact-wrapper {
+  margin-bottom: 1.7rem;
+}
+
+.-bem-section__contact-title {
+  margin-bottom: 1rem;
+}
+
+.-bem-section__credits-wrapper {
+  padding: 6rem 0;
+}
+
+.-bem-section__copyright {
+  margin-bottom: 1.8rem;
+}
+
+.-bem-section__social-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin: 0.5rem;
+
+  outline: none;
+}
+
+.-bem-section__thumbnail {
+  padding: 1rem 1rem;
+}

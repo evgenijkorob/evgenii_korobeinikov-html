@@ -1,0 +1,17 @@
+.-bem-list__inner {
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.-bem-list__inner_row {
+  flex-direction: row;
+}
+
+.-bem-list__item-container {
+  display: flex;
+  flex-flow: row nowrap;
+}

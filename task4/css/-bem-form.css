@@ -1,0 +1,58 @@
+.-bem-form__fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.-bem-form__input-container {
+  padding: 0.8rem 0;
+}
+
+.-bem-form_theme_elegance .-bem-form__fieldset {
+  border: none;
+}
+
+.-bem-form_theme_elegance .-bem-form__legend-container {
+  color: white;
+}
+
+.-bem-form_theme_elegance .-bem-form__input {
+  color: white;
+}
+
+.-bem-form_theme_elegance .-bem-form__input::placeholder {
+  color: white;
+}
+
+.-bem-form_theme_elegance .-bem-form__input {
+  background: transparent;
+  border-width: 0 0 0.08rem 0;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+.-bem-form_theme_elegance .-bem-form__input:focus {
+  border-color: white;
+}
+
+.-bem-form__input_spaced {
+  padding: 0.5rem;
+}
+
+.-bem-form__submit {
+  margin-top: 0.5rem;
+  padding: 0.4rem 6rem;
+
+  border: 0.1rem solid white;
+  outline: none;
+}
+
+.-bem-form_theme_elegance .-bem-form__submit {
+  background: white;
+}
+
+.-bem-form__textarea {
+  overflow: auto;
+
+  resize: vertical;
+}

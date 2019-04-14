@@ -1,0 +1,22 @@
+.-bem-button {
+  padding: 0;
+
+  outline: none;
+}
+
+.-bem-button_rounded {
+  border-radius: 3rem;
+}
+
+.-bem-button_heavy {
+  border: 0.1rem solid #161616;
+}
+
+.-bem-button__inner {
+  display: block;
+  padding: 1.1em 3em;
+}
+
+.-bem-button_transparent {
+  background: rgba(0, 0, 0, 0);
+}
