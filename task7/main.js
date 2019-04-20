@@ -1,7 +1,8 @@
-const ROOF_TYPE = Object.create(null);
-ROOF_TYPE.TRIANGLE = 1;
-ROOF_TYPE.RECTANGLE = 2;
-ROOF_TYPE.TRAPEZIUM = 3;
+const ROOF_TYPE = {
+  TRIANGLE: 1,
+  RECTANGLE: 2,
+  TRAPEZIUM: 3
+};
 
 class Roof {
   constructor(type, height, topWidth) {
@@ -218,29 +219,25 @@ class Point {
 
 class Line {
   constructor(x1, y1, x2, y2) {
-    let coords = {
-          x1,
-          y1,
-          x2,
-          y2
-        },
-        line;
+    this.coords = {
+      x1,
+      y1,
+      x2,
+      y2
+    }
     if (x1 === x2) {
-      line = this._generateByY(coords);
+      return this._generateByY(x1, y1, y2);
     }
     else {
-      line = this._generateByX(coords);
+      return this._generateByX(x1, x2);
     }
-    return line;
   }
 
-  _generateByY(coords) {
-    let line = [],
-        x = coords.x1,
-        y = coords.y1,
-        y2 = coords.y2;
+  _generateByY(x, y1, y2) {
+    let points = [],
+        y = y1;
     while(true) {
-      line.push(new Point(x, y));
+      points.push(new Point(x, y));
       if (y === y2) {
         break;
       }
@@ -251,19 +248,42 @@ class Line {
         y--;
       }
     }
-    return line;
+    return points;
   }
 
-  _generateByX(coords) {
+  _calcFormula() {
+    let coords = this.coords;
+    this._formula = {};
+    this._formula.k = (coords.y2 - coords.y1) / (coords.x2 - coords.x1),
+    this._formula.b = coords.y1 - this._formula.k * coords.x1;
+  }
+
+  _calcY(x) {
+    return Math.round(this._formula.k * x + this._formula.b);
+  }
+
+  _generateByX(x1, x2) {
+    this._calcFormula();
     let line = [],
-        k = (coords.y2 - coords.y1) / (coords.x2 - coords.x1),
-        b = coords.y1 - k * coords.x1,
-        x = coords.x1,
-        x2 = coords.x2,
-        y;
+        prevY,
+        x = x1,
+        y,
+        startY;
     while(true) {
-      y = Math.round(k * x + b);
-      line.push(new Point(x, y));
+      y = this._calcY(x);
+      if (x === x1) {
+        prevY = y;
+      }
+      startY = prevY;
+      if (prevY < y) {
+        startY++;
+      }
+      else if (prevY > y) {
+        startY--;
+      }
+      this._generateByY(x, startY, y)
+          .forEach(point => line.push(point));
+      prevY = y;
       if (x === x2) {
         break;
       }
@@ -513,10 +533,10 @@ class HouseBuilder {
 let configurator = new HouseConfigurator(),
     builder = new HouseBuilder(),
     config;
-configurator.setRoof(ROOF_TYPE.TRIANGLE, 18)
+configurator.setRoof(ROOF_TYPE.TRIANGLE, 5)
             .setDoors()
-            .setEntrances(2, 2)
-            .setFloors(3)
+            .setEntrances(1, 2)
+            .setFloors(2)
             .setWindows();
 config = configurator.make();
 console.log(builder.build(config));
