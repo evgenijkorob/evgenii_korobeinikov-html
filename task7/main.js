@@ -1,15 +1,40 @@
+const ROOF_TYPE = Object.create(null);
+ROOF_TYPE.TRIANGLE = 1;
+ROOF_TYPE.RECTANGLE = 2;
+ROOF_TYPE.TRAPEZIUM = 3;
+
+class Roof {
+  constructor(type, height, topWidth) {
+    let isValidType = false;
+    for (let roofType in ROOF_TYPE) {
+      if (roofType === type) {
+        this.type = type;
+        isValidType = true;
+        break;
+      }
+    }
+    if (!isValidType) {
+      this.type = ROOF_TYPE.TRIANGLE;
+    }
+    this.height = height;
+    if (this.type === ROOF_TYPE.TRAPEZIUM) {
+      this.topWidth = topWidth;
+    }
+  }
+}
+
 class HouseConfigurator {
   constructor() {
     this._config = {
       floors: 1,
-      entrances: {
+      entrance: {
         amount: 1,
         width: 1
       },
+      block: this._defaultBlock,
       door: null,
-      isWindowExist: false,
-      roof: "",
-      block: this._defaultBlock
+      window: null,
+      roof: null,
     };
   }
 
@@ -27,28 +52,65 @@ class HouseConfigurator {
     };
   }
 
+  get _defaultWindow() {
+    return {
+      width: 5,
+      height: 3,
+      leaf: true
+    };
+  }
+
+  get _defaultRoof() {
+    return new Roof(ROOF_TYPE.TRIANGLE, 5);
+  }
+
   setFloors(amount) {
     if (amount > 0) {
       this._config.floors = amount;
     }
+    return this;
   }
 
   setEntrances(amount, widthInBlocks) {
     if (amount > 0) {
-      this._config.entrances.amount = amount;
+      this._config.entrance.amount = amount;
     }
     if (widthInBlocks > 0) {
-      this._config.entrances.width = widthInBlocks;
+      this._config.entrance.width = widthInBlocks;
+    }
+    return this;
+  }
+
+  _notIntegerValues(...values) {
+    return values.some(n => !Number.isInteger(n));
+  }
+
+  _validateBlock() {
+    let block = this._config.block,
+        def = this._defaultBlock;
+    if (this._notIntegerValues(block.width, block.height) ||
+        block.width < def.width || block.height < def.height) {
+      this._config.block = def;
     }
   }
 
-  setBlockSize(width, height) {
-    const def = this._defaultBlock;
-    if (width >= def.width) {
-      this._config.block.width = width;
+  setBlock(width, height) {
+    this._config.block.width = width;
+    this._config.block.height = height;
+    return this;
+  }
+
+  _validateDoor() {
+    if (!this._config.door) {
+      return;
     }
-    if (height >= def.height) {
-      this._config.block.height = height;
+    let door = this._config.door,
+        def = this._defaultDoor,
+        block = this._config.block;
+    if (this._notIntegerValues(door.width, door.height) ||
+        door.width > block.width || door.height > block.height ||
+        door.width < def.width || door.height < def.height) {
+      this._config.door = def;
     }
   }
 
@@ -56,31 +118,69 @@ class HouseConfigurator {
     if (!this._config.door) {
       this._config.door = this._defaultDoor;
     }
-    if (width >= this._defaultDoor.width && width <= this._config.block.width - 2) {
-      this._config.door.width = width;
+    this._config.door.width = width;
+    this._config.door.height = height;
+    return this;
+  }
+
+  _validateWindow() {
+    if (!this._config.window) {
+      return;
     }
-    if (height >= this._defaultDoor.height && height <= this._config.block.height - 1) {
-      this._config.door.height = height;
+    if (this._config.floors === 1 && this._config.entrance.width === 1 && this._config.door) {
+      this._config.window = null;
+      return;
+    }
+    let window = this._config.window,
+        def = this._defaultWindow,
+        block = this._config.block;
+    if (this._notIntegerValues(window.width, window.height) ||
+        window.width > block.width || window.height > block.height ||
+        window.width < def.width || window.height < def.height) {
+      this._config.window = def;
     }
   }
 
-  addWindows() {
-    if (this._config.entrances.width > 1 || this._config.floors > 1) {
-      this._config.isWindowExist = true;
+  setWindows(width, height, hasWindowLeaf) {
+    if (!this._config.window) {
+      this._config.window = this._defaultWindow;
+    }
+    this._config.window.width = width;
+    this._config.window.height = height;
+    if (hasWindowLeaf !== undefined) {
+      this._config.window.leaf = hasWindowLeaf;
+    }
+    return this;
+  }
+
+  _validateRoof() {
+    if (!this._config.roof) {
+      return;
+    }
+    let config = this._config,
+        roof = config.roof,
+        houseWidth = config.block.width * config.entrance.width * config.entrance.amount;
+    if (this._notIntegerValues(roof.height) ||
+        (roof.type === ROOF_TYPE.TRAPEZIUM && (this._notIntegerValues(roof.topWidth) || roof.topWidth > houseWidth))  ||
+        roof.height < 1) {
+      this._config.roof = this._defaultRoof;
     }
   }
 
-  addRoof(type) {
-    switch(type) {
-      case "triangle":
-      case "rectangle":
-      case "trapezium":
-        this._config.roof = type;
-        break;
+  setRoof(type, height, topWidth) {
+    if (arguments.length === 0) {
+      this._config.roof = this._defaultRoof;
     }
+    else {
+      this._config.roof = new Roof(type, height, topWidth);
+    }
+    return this;
   }
 
   make() {
+    this._validateBlock();
+    this._validateDoor();
+    this._validateWindow();
     return this._config;
   }
 }
@@ -138,15 +238,18 @@ class Line {
   _generateByY(coords) {
     let line = [],
         x = coords.x1,
-        y = coords.y1;
-    if (y < coords.y2) {
-      for (; y <= coords.y2; y++) {
-        line.push(new Point(x, y));
+        y = coords.y1,
+        y2 = coords.y2;
+    while(true) {
+      line.push(new Point(x, y));
+      if (y === y2) {
+        break;
       }
-    }
-    else {
-      for (; y >= coords.y2; y--) {
-        line.push(new Point(x, y));
+      if (y < y2) {
+        y++;
+      }
+      else {
+        y--;
       }
     }
     return line;
@@ -154,22 +257,22 @@ class Line {
 
   _generateByX(coords) {
     let line = [],
-        k,
-        b;
-    k = (coords.y2 - coords.y1) / (coords.x2 - coords.x1);
-    b = coords.y1 - k * coords.x1;
-    let x = coords.x1,
+        k = (coords.y2 - coords.y1) / (coords.x2 - coords.x1),
+        b = coords.y1 - k * coords.x1,
+        x = coords.x1,
+        x2 = coords.x2,
         y;
-    if (x < coords.x2) {
-      for (; x <= coords.x2; x++) {
-        y = Math.round(k * x + b);
-        line.push(new Point(x, y));
+    while(true) {
+      y = Math.round(k * x + b);
+      line.push(new Point(x, y));
+      if (x === x2) {
+        break;
       }
-    }
-    else {
-      for (; x >= coords.x2; x--) {
-        y = Math.round(k * x + b);
-        line.push(new Point(x, y));
+      if (x < x2) {
+        x++;
+      }
+      else {
+        x--;
       }
     }
     return line;
@@ -177,10 +280,6 @@ class Line {
 }
 
 class HouseBuilder {
-  _isRoofed() {
-    return this._config.roof !== "";
-  }
-
   _getRectangleElems(type = "normal") {
     let corners, sides;
     switch(type) {
@@ -199,9 +298,9 @@ class HouseBuilder {
   _initialize() {
     let config = this._config,
         rows = config.floors * config.block.height,
-        cols = config.entrances.amount * config.entrances.width * config.block.width;
-    if (this._isRoofed()) {
-      rows += config.block.height;
+        cols = config.entrance.amount * config.entrance.width * config.block.width;
+    if (config.roof) {
+      rows += config.roof.height;
     }
     this._house2D = Array.from({ length: rows }, () => {
       let row = Array.from({ length: cols }, () => " ");
@@ -218,66 +317,41 @@ class HouseBuilder {
 
   _drawLine(x1, y1, x2, y2, lineElems = new LineElements("\u2588", "\u2588", "\u2588")) {
     let line = new Line(x1, y1, x2, y2),
-        elemToDraw;
-    line.forEach((point) => {
-      if (point.x === x1) {
+        elemToDraw,
+        point;
+    for (let i = 0; i < line.length; i++) {
+      point = line[i];
+      if (i === 0) {
         elemToDraw = lineElems.start;
       }
-      else if (point.x === x2) {
+      else if (i === line.length - 1) {
         elemToDraw = lineElems.end;
       }
       else {
         elemToDraw = lineElems.middle;
       }
       this._drawPixel(point.x, point.y, elemToDraw);
-    });
+    }
   }
 
-  _drawRectangle(x1, y1, x2, y2, rectElems = this._getRectangleElems("normal")) {
-    let rectangle = rectElems;
-    for (let y = y1; y <= y2; y++) {
-      if (y === y1 || y === y2) {
-        let x = x1,
-            elemToDraw,
-            left,
-            right,
-            middle;
-        if (y === y1) {
-          left = rectangle.corner.topLeft;
-          right = rectangle.corner.topRight;
-          middle = rectangle.side.top;
-        }
-        else {
-          left = rectangle.corner.bottomLeft;
-          right = rectangle.corner.bottomRight;
-          middle = rectangle.side.bottom;
-        }
-        while (x <= x2) {
-          if (x === x1) {
-            elemToDraw = left;
-          }
-          else if (x === x2) {
-            elemToDraw = right;
-          }
-          else {
-            elemToDraw = middle;
-          }
-          this._drawPixel(x, y, elemToDraw);
-          x++;
-        }
-      }
-      else {
-        this._drawPixel(x1, y, rectangle.side.left);
-        this._drawPixel(x2, y, rectangle.side.right);
-      }
+  _drawRectangle(x1, y1, x2, y2, rect = this._getRectangleElems("normal")) {
+    let topLine = new LineElements(rect.corner.topLeft, rect.side.top, rect.corner.topRight),
+        bottomLine = new LineElements(rect.corner.bottomLeft, rect.side.bottom, rect.corner.bottomRight),
+        leftLine = new LineElements(rect.side.left, rect.side.left, rect.side.left),
+        rightLine = new LineElements(rect.side.right, rect.side.right, rect.side.right);
+    this._drawLine(x1, y1, x2, y1, topLine);
+    this._drawLine(x1, y2, x2, y2, bottomLine);
+    if (y2 - y1 !== 1) {
+      this._drawLine(x1, y1 + 1, x1, y2 - 1, leftLine);
+      this._drawLine(x2, y1 + 1, x2, y2 - 1, rightLine);
     }
   }
 
   _drawHouseBorder() {
     let x = 0,
         y = 0;
-    if (this._isRoofed()) {
-      y = this._config.block.height;
+    if (this._config.roof) {
+      y = this._config.roof.height;
     }
     this._drawRectangle(x, y, this._maxX, this._maxY);
   }
@@ -285,17 +359,51 @@ class HouseBuilder {
   _drawDoors() {
     let block = this._config.block,
         door = this._config.door,
-        entranceWidth = this._config.entrances.width * block.width,
+        entranceWidth = this._config.entrance.width * block.width,
         doorElems = this._getRectangleElems("normal"),
-        y1 = this._maxY - (door.height - 1),
+        startY = this._maxY - (door.height - 1),
+        startX = Math.floor((block.width / 2 - door.width / 2)),
         doorHandle = "\u2022",
-        doorHandleY = y1 + Math.floor(door.height / 2),
-        x1;
+        doorHandleY = startY + Math.floor(door.height / 2),
+        x;
     doorElems.corner.bottomLeft = doorElems.corner.bottomRight = "\u2534";
-    for (let i = 0; i < this._config.entrances.amount; i++) {
-      x1 = i * entranceWidth + Math.floor((block.width - door.width) / 2);
-      this._drawRectangle(x1, y1, x1 + door.width, y1 + (door.height - 1), doorElems);
-      this._drawPixel(x1 + 1, doorHandleY, doorHandle);
+    for (let i = 0; i < this._config.entrance.amount; i++) {
+      x = i * entranceWidth + startX;
+      this._drawRectangle(x, startY, x + door.width, startY + (door.height - 1), doorElems);
+      this._drawPixel(x + 1, doorHandleY, doorHandle);
+    }
+  }
+
+  _drawWindows() {
+    let window = this._config.window,
+        block = this._config.block,
+        entranceWidth = block.width * this._config.entrance.width,
+        startX = Math.floor((block.width / 2 - window.width / 2)),
+        startY = this._maxY - block.height + 2,
+        windowElems = this._getRectangleElems("double"),
+        horizLeafPart = new LineElements("\u2560", "\u2550", "\u2563"),
+        verticLeafPart = new LineElements("\u2566", "\u2551", "\u2569"),
+        endX,
+        endY;
+
+    for (let entranceIndx = 0; entranceIndx < this._config.entrance.amount; entranceIndx++) {
+      let x1 = startX + entranceIndx * entranceWidth;
+      for (let y = startY; y >= 0; y -= block.height) {
+        endY = y + window.height - 1;
+        for (let x = x1; x < x1 + entranceWidth; x += block.width) {
+          if (this._config.door && y === startY && x === x1) {
+            continue;
+          }
+          endX = x + window.width - 1;
+          this._drawRectangle(x, y, endX, endY, windowElems);
+          if (window.leaf) {
+            let centerX = endX - Math.floor(window.width / 2),
+                centerY = endY - Math.floor(window.height / 2);
+            this._drawLine(centerX, y, centerX, endY, verticLeafPart);
+            this._drawLine(centerX, centerY, endX, centerY, horizLeafPart);
+          }
+        }
+      }
     }
   }
 
@@ -312,18 +420,18 @@ class HouseBuilder {
     if (config.door) {
       this._drawDoors();
     }
+    if (config.window) {
+      this._drawWindows();
+    }
     return this._makeStr();
   }
 }
 
-class HouseDirector {
-  make(config = new HouseConfigurator().make()) {
-    let builder = new HouseBuilder();
-    return builder.build(config);
-  }
-}
 
 
-
-let director = new HouseDirector();
-console.log(director.make());
+let configurator = new HouseConfigurator(),
+    builder = new HouseBuilder(),
+    config;
+configurator.setDoors().setEntrances(2, 2).setFloors(3).setWindows();
+config = configurator.make();
+console.log(builder.build(config));
