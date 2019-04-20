@@ -5,21 +5,20 @@ ROOF_TYPE.TRAPEZIUM = 3;
 
 class Roof {
   constructor(type, height, topWidth) {
-    let isValidType = false;
-    for (let roofType in ROOF_TYPE) {
-      if (roofType === type) {
-        this.type = type;
-        isValidType = true;
-        break;
-      }
-    }
-    if (!isValidType) {
+    if (!this._isValidType(type)) {
       this.type = ROOF_TYPE.TRIANGLE;
+    }
+    else {
+      this.type = type;
     }
     this.height = height;
     if (this.type === ROOF_TYPE.TRAPEZIUM) {
-      this.topWidth = topWidth;
+      this.topWidth = (topWidth > 1) ? topWidth : 2;
     }
+  }
+
+  _isValidType(type) {
+    return Object.entries(ROOF_TYPE).some(prop => prop[1] === type);
   }
 }
 
@@ -315,10 +314,14 @@ class HouseBuilder {
     this._house2D[y][x] = pixel;
   }
 
-  _drawLine(x1, y1, x2, y2, lineElems = new LineElements("\u2588", "\u2588", "\u2588")) {
+  _drawLine(x1, y1, x2, y2, lineElems) {
     let line = new Line(x1, y1, x2, y2),
         elemToDraw,
         point;
+    if (!lineElems) {
+      let defElem = "\u2592";
+      lineElems = new LineElements(defElem, defElem, defElem);
+    }
     for (let i = 0; i < line.length; i++) {
       point = line[i];
       if (i === 0) {
@@ -388,7 +391,7 @@ class HouseBuilder {
 
     for (let entranceIndx = 0; entranceIndx < this._config.entrance.amount; entranceIndx++) {
       let x1 = startX + entranceIndx * entranceWidth;
-      for (let y = startY; y >= 0; y -= block.height) {
+      for (let y = startY; y >= this._config.roof.height; y -= block.height) {
         endY = y + window.height - 1;
         for (let x = x1; x < x1 + entranceWidth; x += block.width) {
           if (this._config.door && y === startY && x === x1) {
@@ -407,6 +410,81 @@ class HouseBuilder {
     }
   }
 
+  _calcRoofMainPoints() {
+    let roof = this._config.roof,
+        startX = 0,
+        startY = roof.height - 1,
+        topLeftCornerX,
+        topRightCornerX,
+        centerX = this._maxX / 2;
+    switch(roof.type) {
+      case ROOF_TYPE.TRIANGLE:
+        if (!Number.isInteger(centerX)) {
+          topLeftCornerX = centerX - 0.5;
+          topRightCornerX = centerX + 0.5;
+        }
+        else {
+          topLeftCornerX = topRightCornerX = centerX;
+        }
+        break;
+      case ROOF_TYPE.RECTANGLE:
+        topLeftCornerX = startX;
+        topRightCornerX = this._maxX;
+        break;
+      case ROOF_TYPE.TRAPEZIUM:
+        let houseWidth = this._maxX + 1;
+        if (roof.topWidth > houseWidth) {
+          roof.topWidth = houseWidth;
+          topLeftCornerX = startX;
+          topRightCornerX = this._maxX;
+        }
+        else {
+          let offset = roof.topWidth / 2;
+          topLeftCornerX = Math.floor(centerX - offset);
+          topRightCornerX = Math.floor(centerX + offset);
+        }
+        break;
+    }
+    return {
+      startX,
+      startY,
+      topLeftCornerX,
+      topRightCornerX
+    };
+  }
+
+  _calcRoofPointArr() {
+    let {
+          startX,
+          startY,
+          topLeftCornerX,
+          topRightCornerX
+        } = this._calcRoofMainPoints(),
+        pointArr = [];
+    pointArr.push(new Point(startX, startY));
+    pointArr.push(new Point(topLeftCornerX, 0));
+    if (topLeftCornerX !== topRightCornerX) {
+      pointArr.push(new Point(topRightCornerX, 0));
+    }
+    pointArr.push(new Point(this._maxX, startY));
+    return pointArr;
+  }
+
+  _drawPolygon(coords, lineElems) {
+    let firstP = coords[0],
+        lastP = coords[coords.length - 1];
+    coords.reduce((prevPoint, targetPoint) => {
+      this._drawLine(prevPoint.x, prevPoint.y, targetPoint.x, targetPoint.y, lineElems);
+      return targetPoint;
+    });
+    this._drawLine(lastP.x, lastP.y, firstP.x, firstP.y, lineElems);
+  }
+
+  _drawRoof() {
+    let roofCoords = this._calcRoofPointArr();
+    this._drawPolygon(roofCoords);
+  }
+
   _makeStr() {
     return this._house2D.reduce((str, row) => {
       return str + row.reduce((resultRow, el) => resultRow + el);
@@ -423,6 +501,9 @@ class HouseBuilder {
     if (config.window) {
       this._drawWindows();
     }
+    if (config.roof) {
+      this._drawRoof();
+    }
     return this._makeStr();
   }
 }
@@ -432,6 +513,10 @@ class HouseBuilder {
 let configurator = new HouseConfigurator(),
     builder = new HouseBuilder(),
     config;
-configurator.setDoors().setEntrances(2, 2).setFloors(3).setWindows();
+configurator.setRoof(ROOF_TYPE.TRIANGLE, 18)
+            .setDoors()
+            .setEntrances(2, 2)
+            .setFloors(3)
+            .setWindows();
 config = configurator.make();
 console.log(builder.build(config));
