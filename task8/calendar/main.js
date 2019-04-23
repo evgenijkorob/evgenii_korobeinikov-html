@@ -82,7 +82,10 @@ const CALENDAR_CLASSES = {
   },
   monthpickerElement: {
     tag: 'li',
-    classList: ['monthpicker__element']
+    classList: ['monthpicker__element'],
+    mod: {
+      active: '_active'
+    }
   },
   daypicker: {
     tag: 'table',
@@ -145,9 +148,12 @@ CalendarController.prototype = {
   showCalendar: function() {
     return this.view.render();
   }
-}
+};
 
-function CalendarDB(today = new Date()) {
+function CalendarDB(today) {
+  if (!today) {
+    today = new Date();
+  }
   this.today = today;
   this.chosenDate = today;
 }
@@ -210,6 +216,7 @@ CalendarRenderer.prototype = {
 
     parent.appendChild(yearpicker);
     yearpicker.appendChild(yearpickerInner);
+    yearpickerYear.textContent = CalendarDB.getDateAsStr(this.db.chosenDate).year;
     yearpickerInner.append(yearpickerControlWrapper, yearpickerYear);
     yearpickerControlWrapper.append(yearpickerControlIncreaser, yearpickerControlDecreaser);
   },
@@ -217,10 +224,20 @@ CalendarRenderer.prototype = {
   renderMonthpicker: function(parent) {
     let monthpicker = this.createCalElem('monthpicker'),
         monthpickerContainer = this.createCalElem('monthpickerContainer'),
-        monthpickerElement = this.createCalElem('monthpickerElement');
+        currMonthNum = this.db.chosenDate.getMonth();
+
     parent.appendChild(monthpicker);
     monthpicker.appendChild(monthpickerContainer);
-    monthpickerContainer.append(monthpickerElement);
+
+    let monthpickerElems = Array.from(MONTH_NAMES, function(name) {
+      let elem = this.createCalElem('monthpickerElement');
+      elem.textContent = name.slice(0, 3);
+      return elem;
+    }, this);
+    this.toggleMod(monthpickerElems[currMonthNum], 'monthpickerElement', 'active');
+    monthpickerElems.forEach(function(elem) {
+      monthpickerContainer.appendChild(elem);
+    });
   },
 
   renderDaypicker: function(parent) {
@@ -272,6 +289,13 @@ const rendererHelperMixin = {
 
   getCalElemMainClassStr: function(elementName) {
     return "." + CALENDAR_CLASSES[elementName].classList[0];
+  },
+
+  toggleMod: function(node, elementName, elementMod) {
+    let elem = CALENDAR_CLASSES[elementName],
+        elemClass = elem.classList[0],
+        modifier = elemClass + elem.mod[elementMod];
+    node.classList.toggle(modifier);
   }
 }
 

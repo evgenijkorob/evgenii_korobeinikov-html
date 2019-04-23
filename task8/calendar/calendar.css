@@ -6,3 +6,8 @@
 .calendar__datepicker {
   width: 500px;
 }
+
+.calendar__date-wrapper {
+  display: flex;
+  flex-direction: column;
+}
