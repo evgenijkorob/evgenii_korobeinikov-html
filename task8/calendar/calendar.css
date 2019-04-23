@@ -1,0 +1,8 @@
+@import url("./datepicker.css");
+@import url("./monthpicker.css");
+@import url("./daypicker.css");
+@import url("./yearpicker.css");
+
+.calendar__datepicker {
+  width: 500px;
+}
