@@ -111,9 +111,20 @@ const CALENDAR_CLASSES = {
     tag: 'tr',
     classList: ['daypicker__day-matrix-row']
   },
-  daypickerDay: {
+  daypickerDayMatrixElement: {
     tag: 'td',
-    classList: ['daypicker__day']
+    classList: ['daypicker__day-matrix-element']
+  },
+  daypickerDayWrapper: {
+    tag: 'div',
+    classList: ['daypicker__day-wrapper']
+  },
+  daypickerDay: {
+    tag: 'div',
+    classList: ['daypicker__day'],
+    mod: {
+      active: "_active"
+    }
   },
   calendarDateWrapper: {
     tag: 'div',
@@ -142,11 +153,31 @@ function CalendarController() {
   this.view = new CalendarRenderer(this.db);
 }
 
+function Day(number, weekDay, month) {
+  this.number = number;
+  this.weekDay = weekDay;
+  this.month = month;
+}
+
 CalendarController.prototype = {
   constructor: CalendarController,
 
   showCalendar: function() {
+    this.db.dayList = this.generateMonthDaysArr(this.db.chosenDate);
     return this.view.render();
+  },
+
+  generateMonthDaysArr: function(date) {
+    let list = [],
+        currYear = date.getFullYear(),
+        currMonth = date.getMonth(),
+        start = new Date(currYear, currMonth),
+        day = start;
+    while(day.getMonth() === currMonth) {
+      list.push(new Day(day.getDate(), day.getDay(), day.getMonth()));
+      day.setDate(day.getDate() + 1);
+    };
+    return list;
   }
 };
 
@@ -154,6 +185,7 @@ function CalendarDB(today) {
   today = today || new Date();
   this.today = today;
   this.chosenDate = today;
+  this.dayList = [];
 }
 
 CalendarDB.prototype = {
@@ -211,11 +243,12 @@ CalendarRenderer.prototype = {
         yearpickerControlWrapper = this.createCalElem('yearpickerControlWrapper'),
         yearpickerControlIncreaser = this.createCalElem('yearpickerControlIncreaser'),
         yearpickerControlDecreaser = this.createCalElem('yearpickerControlDecreaser'),
-        yearpickerYear = this.createCalElem('yearpickerYear');
+        yearpickerYear = this.createCalElem('yearpickerYear'),
+        chosenYear = CalendarDB.getDateAsStr(this.db.chosenDate).year;
 
     parent.appendChild(yearpicker);
     yearpicker.appendChild(yearpickerInner);
-    yearpickerYear.textContent = CalendarDB.getDateAsStr(this.db.chosenDate).year;
+    yearpickerYear.textContent = chosenYear;
     yearpickerInner.append(yearpickerControlWrapper, yearpickerYear);
     yearpickerControlWrapper.append(yearpickerControlIncreaser, yearpickerControlDecreaser);
   },
@@ -243,16 +276,71 @@ CalendarRenderer.prototype = {
     let daypicker = this.createCalElem('daypicker'),
         daypickerHeading = this.createCalElem('daypickerHeading'),
         daypickerWeekList = this.createCalElem('daypickerWeekList'),
-        daypickerWeekDay = this.createCalElem('daypickerWeekDay'),
-        daypickerDayMatrix = this.createCalElem('daypickerDayMatrix'),
-        daypickerDayMatrixRow = this.createCalElem('daypickerDayMatrixRow'),
-        daypickerDay = this.createCalElem('daypickerDay');
+        daypickerDayMatrix = this.createCalElem('daypickerDayMatrix');
+
     parent.appendChild(daypicker);
     daypicker.append(daypickerHeading, daypickerDayMatrix);
     daypickerHeading.appendChild(daypickerWeekList);
-    daypickerWeekList.append(daypickerWeekDay);
-    daypickerDayMatrix.append(daypickerDayMatrixRow);
-    daypickerDayMatrixRow.append(daypickerDay);
+
+    let weekDayArr = Array.from(DAY_NAMES, function(name) {
+      let elem = this.createCalElem('daypickerWeekDay');
+      elem.textContent = name.slice(0, 3);
+      return elem;
+    }, this);
+    weekDayArr.forEach(function(elem) {
+      daypickerWeekList.appendChild(elem);
+    });
+
+    this.renderDayMatrix(daypickerDayMatrix);
+  },
+
+  renderDayMatrix: function(parent) {
+    function isChosen(day) {
+      let chosenDate = this.db.chosenDate;
+      return chosenDate.getDate() === day.number && chosenDate.getMonth() === day.month;
+    }
+
+    const rowAmount = 5;
+    let dbDayList = this.db.dayList,
+        matrixRowArr = Array.from({ length: rowAmount }, function() {
+          return this.createCalElem('daypickerDayMatrixRow');
+        }, this);
+
+    for (let weekDay = 0; weekDay < dbDayList[0].weekDay; weekDay++) {
+      matrixRowArr[0].appendChild(this.createDayMatrixElement());
+    }
+
+    for (let dayIndx = 0, rowIndx = 0; dayIndx < dbDayList.length; dayIndx++) {
+      let day = dbDayList[dayIndx];
+      let matrixRowElem = this.createDayMatrixElement(day.number);
+      matrixRowArr[rowIndx].appendChild(matrixRowElem);
+      if (isChosen.call(this, day)) {
+        let dayElem = this.queryCalElemAll(matrixRowElem, 'daypickerDay')[0];
+        this.toggleMod(dayElem, 'daypickerDay', 'active');
+      }
+      if (day.weekDay === (DAY_NAMES.length - 1)) {
+        rowIndx++;
+      }
+    }
+    let lastWeekDayOfMonth = dbDayList[dbDayList.length - 1].weekDay;
+    for (let weekDay = lastWeekDayOfMonth + 1; weekDay < DAY_NAMES.length; weekDay++) {
+      matrixRowArr[matrixRowArr.length - 1].appendChild(this.createDayMatrixElement());
+    }
+
+    matrixRowArr.forEach(function(row) {
+      parent.appendChild(row);
+    });
+  },
+
+  createDayMatrixElement: function(content) {
+    content = content || "";
+    let matrixElem = this.createCalElem('daypickerDayMatrixElement'),
+        dayWrapper = this.createCalElem('daypickerDayWrapper'),
+        dayElement = this.createCalElem('daypickerDay');
+    dayElement.textContent = content;
+    matrixElem.appendChild(dayWrapper);
+    dayWrapper.appendChild(dayElement);
+    return matrixElem;
   },
 
   renderCalendarDate: function(parent) {

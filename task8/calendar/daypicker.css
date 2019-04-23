@@ -1,0 +1,47 @@
+.daypicker {
+  width: 100%;
+}
+
+.daypicker__week-list {
+  height: 3rem;
+}
+
+.daypicker__week-day {
+  font-weight: 400;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.daypicker__day-matrix-row {
+  height: 3rem;
+}
+
+.daypicker__day-matrix-element {
+  padding: 0;
+}
+
+.daypicker__day-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.daypicker__day {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+
+  text-align: center;
+
+  border-radius: 6px;
+}
+
+.daypicker__day_active {
+  color: white;
+
+  background-color: #8bc34a;
+}
