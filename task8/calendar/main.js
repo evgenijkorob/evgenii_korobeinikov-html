@@ -151,9 +151,7 @@ CalendarController.prototype = {
 };
 
 function CalendarDB(today) {
-  if (!today) {
-    today = new Date();
-  }
+  today = today || new Date();
   this.today = today;
   this.chosenDate = today;
 }
@@ -181,26 +179,27 @@ CalendarRenderer.prototype = {
   render: function() {
     let domModel = document.createDocumentFragment();
     this.renderSkeleton(domModel);
-    this.renderDatePicker(domModel);
-    this.renderCalendarDate(domModel);
+    let pickerPanel = this.queryCalElemAll(domModel, 'calendarPickerPanel')[0],
+        additionalPanel = this.queryCalElemAll(domModel, 'calendarAdditionalPanel')[0];
+    this.renderDatePicker(pickerPanel);
+    this.renderCalendarDate(additionalPanel);
     return domModel;
   },
 
-  renderSkeleton: function(fragment) {
+  renderSkeleton: function(parent) {
     let calendar = this.createCalElem('calendar'),
         inner = this.createCalElem('calendarInner'),
         pickerPanel = this.createCalElem('calendarPickerPanel'),
         additionalPanel = this.createCalElem('calendarAdditionalPanel');
-    fragment.appendChild(calendar);
+    parent.appendChild(calendar);
     calendar.appendChild(inner);
     inner.append(pickerPanel, additionalPanel);
-    return fragment;
+    return parent;
   },
 
-  renderDatePicker: function(fragment) {
-    let pickerPanel = this.queryCalElemAll(fragment, 'calendarPickerPanel')[0],
-        datepicker = this.createCalElem('datepicker');
-    pickerPanel.appendChild(datepicker);
+  renderDatePicker: function(parent) {
+    let datepicker = this.createCalElem('datepicker');
+    parent.appendChild(datepicker);
     this.renderYearpicker(datepicker);
     this.renderMonthpicker(datepicker);
     this.renderDaypicker(datepicker);
@@ -256,13 +255,12 @@ CalendarRenderer.prototype = {
     daypickerDayMatrixRow.append(daypickerDay);
   },
 
-  renderCalendarDate: function(fragment) {
-    let calendarAdditionalPanel = this.queryCalElemAll(fragment, 'calendarAdditionalPanel')[0],
-        calendarDateWrapper = this.createCalElem('calendarDateWrapper'),
+  renderCalendarDate: function(parent) {
+    let calendarDateWrapper = this.createCalElem('calendarDateWrapper'),
         calendarDateWeek = this.createCalElem('calendarDateWeek'),
         calendarDateDayMonth = this.createCalElem('calendarDateDayMonth'),
         currDateAsStr = CalendarDB.getDateAsStr(this.db.chosenDate);
-    calendarAdditionalPanel.appendChild(calendarDateWrapper);
+    parent.appendChild(calendarDateWrapper);
     calendarDateWeek.textContent = currDateAsStr.weekDay;
     calendarDateDayMonth.textContent = currDateAsStr.month + " " + currDateAsStr.day;
     calendarDateWrapper.append(calendarDateWeek, calendarDateDayMonth);
