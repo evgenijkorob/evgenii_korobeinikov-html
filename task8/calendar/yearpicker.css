@@ -1,4 +1,6 @@
 .yearpicker__year {
+  width: 5.3rem;
+
   font-size: 2.4rem;
 }
 
@@ -12,21 +14,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 0.4rem;
+  margin-right: 1rem;
 
   font-size: 1rem;
   color: #8bc34a;
 }
 
 .yearpicker__increaser {
-  margin-bottom: 0.3rem;
-  padding: 0.4rem 0.4rem 0.1rem;
+  padding: 0.4rem;
 
+  border-radius: 50%;
   cursor: pointer;
+
+  transition: background-color 0.25s cubic-bezier(0.4, 0.18, 0.25, 1);
+}
+
+.yearpicker__increaser:active {
+  background-color: rgba(140, 238, 27, 0.33);
 }
 
 .yearpicker__decreaser {
-  padding: 0.1rem 0.4rem 0.4rem;
+  padding: 0.4rem;
 
+  border-radius: 50%;
   cursor: pointer;
+
+  transition: background-color 0.25s cubic-bezier(0.4, 0.18, 0.25, 1);
+}
+
+.yearpicker__decreaser:active {
+  background-color: rgba(140, 238, 27, 0.33);
 }

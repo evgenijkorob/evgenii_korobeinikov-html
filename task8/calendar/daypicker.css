@@ -38,10 +38,16 @@
   text-align: center;
 
   border-radius: 6px;
+
+  transition: background-color 0.5s ease-out;
 }
 
 .daypicker__day[data-day] {
   cursor: pointer;
+}
+
+.daypicker__day[data-day]:not(.daypicker__day_active):hover {
+  background-color: rgba(136, 236, 21, 0.57);
 }
 
 .daypicker__day_active {

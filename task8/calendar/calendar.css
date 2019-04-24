@@ -39,7 +39,7 @@
   display: flex;
   box-sizing: border-box;
   width: 50%;
-  padding: 3rem 5rem;
+  padding: 3rem 1rem 1rem 4rem;
 
   background: #8bc34a;
   box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.76);
@@ -47,7 +47,7 @@
 
 .calendar__date-wrapper {
   font-weight: 300;
-  font-size: 3.4rem;
+  font-size: 2.8rem;
   color: white;
   text-transform: uppercase;
 }

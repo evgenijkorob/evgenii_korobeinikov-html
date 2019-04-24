@@ -164,21 +164,88 @@ CalendarController.prototype = {
   constructor: CalendarController,
 
   showCalendar: function() {
+    let calendarView;
     this.db.dayList = this.generateMonthDaysArr(this.db.chosenDate);
-    return this.view.render();
+    calendarView = this.view.render();
+    this.setHandlers(calendarView);
+    return calendarView;
   },
 
   generateMonthDaysArr: function(date) {
     let list = [],
-        currYear = date.getFullYear(),
         currMonth = date.getMonth(),
-        start = new Date(currYear, currMonth),
-        day = start;
+        currYear = date.getFullYear(),
+        day = new Date(currYear, currMonth, 1);
+    day.setDate(day.getDate() - 1);
+
+    while(day.getDay() !== 6) {
+      list.push(new Day(day.getDate(), day.getDay(), day.getMonth(), day.getFullYear()));
+      day.setDate(day.getDate() - 1);
+    }
+
+    day.setFullYear(currYear, currMonth, 1);
     while(day.getMonth() === currMonth) {
       list.push(new Day(day.getDate(), day.getDay(), day.getMonth(), day.getFullYear()));
       day.setDate(day.getDate() + 1);
     };
+
+    while(list.length < 42) {
+      list.push(new Day(day.getDate(), day.getDay(), day.getMonth(), day.getFullYear()));
+      day.setDate(day.getDate() + 1);
+    }
     return list;
+  },
+
+  setHandlers: function(view) {
+    let calendar = view.querySelector('.' + CALENDAR_CLASSES.calendar.classList[0]);
+    calendar.addEventListener('click', function(event) {
+      let target = event.target.closest('*[data-date-changer]');
+      if (!target) {
+        return;
+      }
+      let oldDate = this.db.chosenDate,
+          newDate = new Date(oldDate),
+          yearSub = +target.getAttribute('data-year-sub'),
+          year = target.getAttribute('data-year'),
+          month = target.getAttribute('data-month'),
+          day = target.getAttribute('data-day');
+      if (year) {
+        newDate.setFullYear(year);
+      }
+      else if (yearSub) {
+        newDate.setFullYear(oldDate.getFullYear() + yearSub);
+      }
+      if (month) {
+        newDate.setMonth(month);
+      }
+      if (day) {
+        newDate.setDate(day);
+      }
+      this.db.chosenDate = newDate;
+      this.checkNeedForComponentsUpdate(oldDate, calendar);
+    }.bind(this));
+  },
+
+  checkNeedForComponentsUpdate: function(oldDate, calendarView) {
+    let newDate = this.db.chosenDate;
+    if (newDate === oldDate) {
+      return;
+    }
+
+    let isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
+        isMonthChanged = newDate.getMonth() !== oldDate.getMonth();
+    if (isYearChanged) {
+      this.view.updateYearpicker(calendarView);
+    }
+    if (isMonthChanged) {
+      this.view.updateChosenMonth(calendarView);
+    }
+    if (isYearChanged || isMonthChanged) {
+      this.db.dayList = this.generateMonthDaysArr(newDate);
+      this.view.updateDayMatrixData(calendarView);
+    }
+    this.view.updateChosenDayElem(calendarView);
+    this.view.updateCalendarDate(calendarView);
   }
 };
 
@@ -249,6 +316,10 @@ CalendarRenderer.prototype = {
     parent.appendChild(yearpicker);
     yearpicker.appendChild(yearpickerInner);
     yearpickerInner.append(yearpickerControlWrapper, yearpickerYear);
+    yearpickerControlIncreaser.setAttribute('data-date-changer', '');
+    yearpickerControlIncreaser.setAttribute('data-year-sub', 1);
+    yearpickerControlDecreaser.setAttribute('data-date-changer', '');
+    yearpickerControlDecreaser.setAttribute('data-year-sub', -1);
     yearpickerControlWrapper.append(yearpickerControlIncreaser, yearpickerControlDecreaser);
 
     this.updateYearpicker(yearpickerInner);
@@ -273,6 +344,7 @@ CalendarRenderer.prototype = {
       let elem = this.createCalElem('monthpickerElement');
       elem.textContent = name.slice(0, 3);
       elem.setAttribute('data-month', monthNum);
+      elem.setAttribute('data-date-changer', '');
       return elem;
     }, this);
     monthpickerElems.forEach(function(elem) {
@@ -283,7 +355,7 @@ CalendarRenderer.prototype = {
 
   updateChosenMonth: function(parent) {
     let mod = this.getModClass('monthpickerElement', 'active'),
-        lastChosenMonth = parent.querySelector(mod),
+        lastChosenMonth = parent.querySelector('.' + mod),
         elems = this.queryCalElemAll(parent, 'monthpickerElement'),
         month = this.db.chosenDate.getMonth();
     if (lastChosenMonth) {
@@ -322,7 +394,7 @@ CalendarRenderer.prototype = {
   },
 
   renderDayMatrix: function(parent) {
-    const rowAmount = 5;
+    const rowAmount = 6;
     let matrixRowArr = Array.from({ length: rowAmount }, function() {
           return this.createCalElem('daypickerDayMatrixRow');
         }, this);
@@ -340,6 +412,7 @@ CalendarRenderer.prototype = {
         dayElement = this.createCalElem('daypickerDay');
     matrixElem.appendChild(dayWrapper);
     dayWrapper.appendChild(dayElement);
+    dayElement.setAttribute('data-date-changer', '');
     return matrixElem;
   },
 
@@ -358,7 +431,7 @@ CalendarRenderer.prototype = {
       dayElem.setAttribute('data-month', day.month);
       dayElem.setAttribute('data-year', day.year);
 
-      if (day.weekDay === (DAY_NAMES.length - 1)) {
+      if (dayIndx % 7 === 6) {
         rowIndx++;
       }
     }
@@ -366,7 +439,7 @@ CalendarRenderer.prototype = {
 
   updateChosenDayElem: function(parent) {
     let mod = this.getModClass('daypickerDay', 'active'),
-        lastChosenElem = parent.querySelector(mod),
+        lastChosenElem = parent.querySelector('.' + mod),
         date = this.db.chosenDate,
         day = date.getDate(),
         month = date.getMonth(),
