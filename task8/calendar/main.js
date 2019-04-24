@@ -264,8 +264,7 @@ CalendarRenderer.prototype = {
 
   renderMonthpicker: function(parent) {
     let monthpicker = this.createCalElem('monthpicker'),
-        monthpickerContainer = this.createCalElem('monthpickerContainer'),
-        month = this.db.chosenDate.getMonth();
+        monthpickerContainer = this.createCalElem('monthpickerContainer');
 
     parent.appendChild(monthpicker);
     monthpicker.appendChild(monthpickerContainer);
@@ -404,7 +403,21 @@ CalendarRenderer.prototype = {
       calendarDateWeek.textContent = currDateAsStr.weekDay;
     }
     if (calendarDateDayMonth) {
-      calendarDateDayMonth.textContent = currDateAsStr.month + " " + currDateAsStr.day;
+      let content = currDateAsStr.month + " " + currDateAsStr.day;
+      switch(currDateAsStr.day % 10) {
+        case 1:
+          content += 'st';
+          break;
+        case 2:
+          content += 'nd';
+          break;
+        case 3:
+          content += 'rd';
+          break;
+        default:
+          content += 'th';
+      }
+      calendarDateDayMonth.textContent = content;
     }
   }
 }
