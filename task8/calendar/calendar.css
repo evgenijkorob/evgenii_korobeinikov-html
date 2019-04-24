@@ -3,8 +3,53 @@
 @import url("./daypicker.css");
 @import url("./yearpicker.css");
 
+.calendar {
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.calendar__inner {
+  display: flex;
+  overflow: hidden;
+}
+
+.calendar__picker-panel {
+  position: relative;
+
+  order: 1;
+  box-sizing: border-box;
+  padding: 2rem 3.5rem 5rem;
+}
+
 .calendar__datepicker {
   width: 500px;
+  margin-top: 10rem;
+}
+
+.calendar__yearpicker {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
+.calendar__monthpicker {
+  margin-bottom: 1rem;
+}
+
+.calendar__additional-panel {
+  display: flex;
+  box-sizing: border-box;
+  width: 50%;
+  padding: 3rem 5rem;
+
+  background: #8bc34a;
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.76);
+}
+
+.calendar__date-wrapper {
+  font-weight: 300;
+  font-size: 3.4rem;
+  color: white;
+  text-transform: uppercase;
 }
 
 .calendar__date-wrapper {

@@ -50,7 +50,7 @@ const CALENDAR_CLASSES = {
   },
   yearpicker: {
     tag: 'div',
-    classList: ['yearpicker']
+    classList: ['yearpicker', 'calendar__yearpicker']
   },
   yearpickerInner: {
     tag: 'div',
@@ -62,11 +62,11 @@ const CALENDAR_CLASSES = {
   },
   yearpickerControlIncreaser: {
     tag: 'div',
-    classList: ['yearpicker__increaser']
+    classList: ['yearpicker__increaser', 'fas', 'fa-chevron-up']
   },
   yearpickerControlDecreaser: {
     tag: 'div',
-    classList: ['yearpicker__decreaser']
+    classList: ['yearpicker__decreaser', 'fas', 'fa-chevron-down']
   },
   yearpickerYear: {
     tag: 'div',
@@ -74,7 +74,7 @@ const CALENDAR_CLASSES = {
   },
   monthpicker: {
     tag: 'div',
-    classList: ['monthpicker']
+    classList: ['monthpicker', 'calendar__monthpicker']
   },
   monthpickerContainer: {
     tag: 'ul',

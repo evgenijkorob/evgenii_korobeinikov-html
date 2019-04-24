@@ -40,6 +40,10 @@
   border-radius: 6px;
 }
 
+.daypicker__day[data-day] {
+  cursor: pointer;
+}
+
 .daypicker__day_active {
   color: white;
 
