@@ -16,6 +16,8 @@
   text-transform: uppercase;
 
   cursor: pointer;
+
+  transition: font-size 0.08s ease;
 }
 
 .monthpicker__element_active {
