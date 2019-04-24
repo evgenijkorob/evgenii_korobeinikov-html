@@ -153,10 +153,11 @@ function CalendarController() {
   this.view = new CalendarRenderer(this.db);
 }
 
-function Day(number, weekDay, month) {
+function Day(number, weekDay, month, year) {
   this.number = number;
   this.weekDay = weekDay;
   this.month = month;
+  this.year = year;
 }
 
 CalendarController.prototype = {
@@ -174,7 +175,7 @@ CalendarController.prototype = {
         start = new Date(currYear, currMonth),
         day = start;
     while(day.getMonth() === currMonth) {
-      list.push(new Day(day.getDate(), day.getDay(), day.getMonth()));
+      list.push(new Day(day.getDate(), day.getDay(), day.getMonth(), day.getFullYear()));
       day.setDate(day.getDate() + 1);
     };
     return list;
@@ -243,33 +244,58 @@ CalendarRenderer.prototype = {
         yearpickerControlWrapper = this.createCalElem('yearpickerControlWrapper'),
         yearpickerControlIncreaser = this.createCalElem('yearpickerControlIncreaser'),
         yearpickerControlDecreaser = this.createCalElem('yearpickerControlDecreaser'),
-        yearpickerYear = this.createCalElem('yearpickerYear'),
-        chosenYear = CalendarDB.getDateAsStr(this.db.chosenDate).year;
+        yearpickerYear = this.createCalElem('yearpickerYear');
 
     parent.appendChild(yearpicker);
     yearpicker.appendChild(yearpickerInner);
-    yearpickerYear.textContent = chosenYear;
     yearpickerInner.append(yearpickerControlWrapper, yearpickerYear);
     yearpickerControlWrapper.append(yearpickerControlIncreaser, yearpickerControlDecreaser);
+
+    this.updateYearpicker(yearpickerInner);
+  },
+
+  updateYearpicker: function(parent) {
+    let yearElem = this.queryCalElemAll(parent, 'yearpickerYear')[0],
+        year = this.db.chosenDate.getFullYear();
+    if (yearElem) {
+      yearElem.textContent = year;
+    }
   },
 
   renderMonthpicker: function(parent) {
     let monthpicker = this.createCalElem('monthpicker'),
         monthpickerContainer = this.createCalElem('monthpickerContainer'),
-        currMonthNum = this.db.chosenDate.getMonth();
+        month = this.db.chosenDate.getMonth();
 
     parent.appendChild(monthpicker);
     monthpicker.appendChild(monthpickerContainer);
 
-    let monthpickerElems = Array.from(MONTH_NAMES, function(name) {
+    let monthpickerElems = Array.from(MONTH_NAMES, function(name, monthNum) {
       let elem = this.createCalElem('monthpickerElement');
       elem.textContent = name.slice(0, 3);
+      elem.setAttribute('data-month', monthNum);
       return elem;
     }, this);
-    this.toggleMod(monthpickerElems[currMonthNum], 'monthpickerElement', 'active');
     monthpickerElems.forEach(function(elem) {
       monthpickerContainer.appendChild(elem);
     });
+    this.updateChosenMonth(monthpickerContainer);
+  },
+
+  updateChosenMonth: function(parent) {
+    let mod = this.getModClass('monthpickerElement', 'active'),
+        lastChosenMonth = parent.querySelector(mod),
+        elems = this.queryCalElemAll(parent, 'monthpickerElement'),
+        month = this.db.chosenDate.getMonth();
+    if (lastChosenMonth) {
+      lastChosenMonth.classList.remove(mod);
+    }
+    let chosenElem = elems.filter(function(elem) {
+      return elem.getAttribute('data-month') == month;
+    })[0];
+    if (chosenElem) {
+      chosenElem.classList.add(mod);
+    }
   },
 
   renderDaypicker: function(parent) {
@@ -292,72 +318,100 @@ CalendarRenderer.prototype = {
     });
 
     this.renderDayMatrix(daypickerDayMatrix);
+    this.updateDayMatrixData(daypickerDayMatrix);
+    this.updateChosenDayElem(daypickerDayMatrix);
   },
 
   renderDayMatrix: function(parent) {
-    function isChosen(day) {
-      let chosenDate = this.db.chosenDate;
-      return chosenDate.getDate() === day.number && chosenDate.getMonth() === day.month;
-    }
-
     const rowAmount = 5;
-    let dbDayList = this.db.dayList,
-        matrixRowArr = Array.from({ length: rowAmount }, function() {
+    let matrixRowArr = Array.from({ length: rowAmount }, function() {
           return this.createCalElem('daypickerDayMatrixRow');
         }, this);
-
-    for (let weekDay = 0; weekDay < dbDayList[0].weekDay; weekDay++) {
-      matrixRowArr[0].appendChild(this.createDayMatrixElement());
-    }
-
-    for (let dayIndx = 0, rowIndx = 0; dayIndx < dbDayList.length; dayIndx++) {
-      let day = dbDayList[dayIndx];
-      let matrixRowElem = this.createDayMatrixElement(day.number);
-      matrixRowArr[rowIndx].appendChild(matrixRowElem);
-      if (isChosen.call(this, day)) {
-        let dayElem = this.queryCalElemAll(matrixRowElem, 'daypickerDay')[0];
-        this.toggleMod(dayElem, 'daypickerDay', 'active');
-      }
-      if (day.weekDay === (DAY_NAMES.length - 1)) {
-        rowIndx++;
-      }
-    }
-    let lastWeekDayOfMonth = dbDayList[dbDayList.length - 1].weekDay;
-    for (let weekDay = lastWeekDayOfMonth + 1; weekDay < DAY_NAMES.length; weekDay++) {
-      matrixRowArr[matrixRowArr.length - 1].appendChild(this.createDayMatrixElement());
-    }
-
     matrixRowArr.forEach(function(row) {
+      for (let i = 0; i < DAY_NAMES.length; i++) {
+        row.appendChild(this.createDayMatrixElement());
+      }
       parent.appendChild(row);
-    });
+    }, this);
   },
 
-  createDayMatrixElement: function(content) {
-    content = content || "";
+  createDayMatrixElement: function() {
     let matrixElem = this.createCalElem('daypickerDayMatrixElement'),
         dayWrapper = this.createCalElem('daypickerDayWrapper'),
         dayElement = this.createCalElem('daypickerDay');
-    dayElement.textContent = content;
     matrixElem.appendChild(dayWrapper);
     dayWrapper.appendChild(dayElement);
     return matrixElem;
   },
 
+  updateDayMatrixData: function(parent) {
+    let rows = this.queryCalElemAll(parent, 'daypickerDayMatrixRow'),
+        dayList = this.db.dayList;
+    if (!rows) {
+      return;
+    }
+    for (let dayIndx = 0, rowIndx = 0; dayIndx < dayList.length; dayIndx++) {
+      let day = dayList[dayIndx],
+          dayElem = this.queryCalElemAll(rows[rowIndx].cells[day.weekDay], 'daypickerDay')[0];
+
+      dayElem.textContent = day.number;
+      dayElem.setAttribute('data-day', day.number);
+      dayElem.setAttribute('data-month', day.month);
+      dayElem.setAttribute('data-year', day.year);
+
+      if (day.weekDay === (DAY_NAMES.length - 1)) {
+        rowIndx++;
+      }
+    }
+  },
+
+  updateChosenDayElem: function(parent) {
+    let mod = this.getModClass('daypickerDay', 'active'),
+        lastChosenElem = parent.querySelector(mod),
+        date = this.db.chosenDate,
+        day = date.getDate(),
+        month = date.getMonth(),
+        year = date.getFullYear(),
+        daysArr = this.queryCalElemAll(parent, 'daypickerDay');
+    if (lastChosenElem) {
+      lastChosenElem.classList.remove(mod);
+    }
+    let chosenElem = daysArr.filter(function(dayElem) {
+      return dayElem.getAttribute('data-day') == day &&
+              dayElem.getAttribute('data-month') == month &&
+              dayElem.getAttribute('data-year') == year;
+    })[0];
+    if (chosenElem) {
+      chosenElem.classList.add(mod);
+    }
+  },
+
   renderCalendarDate: function(parent) {
     let calendarDateWrapper = this.createCalElem('calendarDateWrapper'),
         calendarDateWeek = this.createCalElem('calendarDateWeek'),
-        calendarDateDayMonth = this.createCalElem('calendarDateDayMonth'),
-        currDateAsStr = CalendarDB.getDateAsStr(this.db.chosenDate);
+        calendarDateDayMonth = this.createCalElem('calendarDateDayMonth');
     parent.appendChild(calendarDateWrapper);
-    calendarDateWeek.textContent = currDateAsStr.weekDay;
-    calendarDateDayMonth.textContent = currDateAsStr.month + " " + currDateAsStr.day;
     calendarDateWrapper.append(calendarDateWeek, calendarDateDayMonth);
+    this.updateCalendarDate(calendarDateWrapper);
+  },
+
+  updateCalendarDate: function(parent) {
+    let calendarDateWeek = this.queryCalElemAll(parent, 'calendarDateWeek')[0],
+        calendarDateDayMonth = this.queryCalElemAll(parent, 'calendarDateDayMonth')[0],
+        currDateAsStr = CalendarDB.getDateAsStr(this.db.chosenDate);
+
+    if (calendarDateWeek) {
+      calendarDateWeek.textContent = currDateAsStr.weekDay;
+    }
+    if (calendarDateDayMonth) {
+      calendarDateDayMonth.textContent = currDateAsStr.month + " " + currDateAsStr.day;
+    }
   }
 }
 
 const rendererHelperMixin = {
   queryCalElemAll: function(fragment, elementName) {
-    return fragment.querySelectorAll(this.getCalElemMainClassStr(elementName));
+    return Array.from(fragment.querySelectorAll(this.getCalElemMainClassStr(elementName)));
   },
 
   createCalElem: function(elementName) {
@@ -377,12 +431,12 @@ const rendererHelperMixin = {
     return "." + CALENDAR_CLASSES[elementName].classList[0];
   },
 
-  toggleMod: function(node, elementName, elementMod) {
+  getModClass: function(elementName, elementMod) {
     let elem = CALENDAR_CLASSES[elementName],
         elemClass = elem.classList[0],
         modifier = elemClass + elem.mod[elementMod];
-    node.classList.toggle(modifier);
-  }
+    return modifier;
+  },
 }
 
 for (let key in rendererHelperMixin) {
