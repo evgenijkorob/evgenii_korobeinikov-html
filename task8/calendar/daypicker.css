@@ -32,22 +32,28 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
   width: 2.6rem;
   height: 2.6rem;
 
   text-align: center;
 
+  border-width: 0.1rem;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0);
   border-radius: 6px;
 
-  transition: background-color 0.5s ease-out;
+  transition-timing-function: ease-out;
+  transition-duration: 0.5s;
+  transition-property: border-color;
 }
 
 .daypicker__day[data-day] {
   cursor: pointer;
 }
 
-.daypicker__day[data-day]:not(.daypicker__day_active):hover {
-  background-color: rgba(136, 236, 21, 0.57);
+.daypicker__day[data-day]:hover {
+  border-color: #8bc34a;
 }
 
 .daypicker__day_active {
