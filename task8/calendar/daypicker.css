@@ -55,3 +55,7 @@
 
   background-color: #8bc34a;
 }
+
+.daypicker__day_faded {
+  color: #bebebe;
+}

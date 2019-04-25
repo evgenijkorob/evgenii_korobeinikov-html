@@ -46,13 +46,33 @@
 }
 
 .calendar__date-wrapper {
+  position: absolute;
+  top: 3rem;
+  left: 7rem;
+
+  display: flex;
+  flex-direction: column;
+
   font-weight: 300;
   font-size: 2.8rem;
-  color: white;
   text-transform: uppercase;
 }
 
-.calendar__date-wrapper {
+.calendar__date-day {
+  position: absolute;
+  top: -2rem;
+  left: -11.8rem;
+
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 9rem;
+  height: 9rem;
+
+  font-size: 4rem;
+  color: white;
+
+  background: #8bc34a;
+  border: 0.4rem solid white;
+  border-radius: 50%;
 }

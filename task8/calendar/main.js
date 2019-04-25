@@ -123,7 +123,8 @@ const CALENDAR_CLASSES = {
     tag: 'div',
     classList: ['daypicker__day'],
     mod: {
-      active: "_active"
+      active: '_active',
+      faded: '_faded'
     }
   },
   calendarDateWrapper: {
@@ -134,9 +135,13 @@ const CALENDAR_CLASSES = {
     tag: 'span',
     classList: ['calendar__date-week']
   },
-  calendarDateDayMonth: {
+  calendarDateMonth: {
     tag: 'span',
-    classList: ['calendar__date-day-month']
+    classList: ['calendar__date-month']
+  },
+  calendarDateDay: {
+    tag: 'span',
+    classList: ['calendar__date-day']
   }
 }
 
@@ -282,7 +287,7 @@ CalendarRenderer.prototype = {
     let pickerPanel = this.queryCalElemAll(domModel, 'calendarPickerPanel')[0],
         additionalPanel = this.queryCalElemAll(domModel, 'calendarAdditionalPanel')[0];
     this.renderDatePicker(pickerPanel);
-    this.renderCalendarDate(additionalPanel);
+    this.renderCalendarDate(pickerPanel);
     return domModel;
   },
 
@@ -461,36 +466,27 @@ CalendarRenderer.prototype = {
   renderCalendarDate: function(parent) {
     let calendarDateWrapper = this.createCalElem('calendarDateWrapper'),
         calendarDateWeek = this.createCalElem('calendarDateWeek'),
-        calendarDateDayMonth = this.createCalElem('calendarDateDayMonth');
+        calendarDateMonth = this.createCalElem('calendarDateMonth'),
+        calendarDateDay = this.createCalElem('calendarDateDay');
     parent.appendChild(calendarDateWrapper);
-    calendarDateWrapper.append(calendarDateWeek, calendarDateDayMonth);
+    calendarDateWrapper.append(calendarDateWeek, calendarDateMonth, calendarDateDay);
     this.updateCalendarDate(calendarDateWrapper);
   },
 
   updateCalendarDate: function(parent) {
     let calendarDateWeek = this.queryCalElemAll(parent, 'calendarDateWeek')[0],
-        calendarDateDayMonth = this.queryCalElemAll(parent, 'calendarDateDayMonth')[0],
+        calendarDateMonth = this.queryCalElemAll(parent, 'calendarDateMonth')[0],
+        calendarDateDay = this.queryCalElemAll(parent, 'calendarDateDay')[0],
         currDateAsStr = CalendarDB.getDateAsStr(this.db.chosenDate);
 
     if (calendarDateWeek) {
       calendarDateWeek.textContent = currDateAsStr.weekDay;
     }
-    if (calendarDateDayMonth) {
-      let content = currDateAsStr.month + " " + currDateAsStr.day;
-      switch(currDateAsStr.day % 10) {
-        case 1:
-          content += 'st';
-          break;
-        case 2:
-          content += 'nd';
-          break;
-        case 3:
-          content += 'rd';
-          break;
-        default:
-          content += 'th';
-      }
-      calendarDateDayMonth.textContent = content;
+    if (calendarDateMonth) {
+      calendarDateMonth.textContent = currDateAsStr.month;
+    }
+    if (calendarDateDay) {
+      calendarDateDay.textContent = currDateAsStr.day;
     }
   }
 }
