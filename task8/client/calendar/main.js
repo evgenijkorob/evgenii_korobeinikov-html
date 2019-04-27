@@ -124,7 +124,8 @@ const CALENDAR_CLASSES = {
     classList: ['daypicker__day'],
     mod: {
       active: '_active',
-      faded: '_faded'
+      faded: '_faded',
+      today: '_today'
     }
   },
   calendarDateWrapper: {
@@ -220,7 +221,7 @@ CalendarController.prototype = {
         yearSub = +node.getAttribute('data-year-sub'),
         year = node.getAttribute('data-year'),
         month = node.getAttribute('data-month'),
-        day = node.getAttribute('data-day');
+        day = +node.getAttribute('data-day');
     if (year) {
       newDate.setFullYear(year);
     }
@@ -228,10 +229,13 @@ CalendarController.prototype = {
       newDate.setFullYear(oldDate.getFullYear() + yearSub);
     }
     if (month) {
-      newDate.setMonth(month);
+      newDate.setMonth(month, 1);
     }
     if (day) {
       newDate.setDate(day);
+    }
+    else {
+      newDate.setDate(oldDate.getDate());
     }
     return newDate;
   },
@@ -253,6 +257,7 @@ CalendarController.prototype = {
     if (isYearChanged || isMonthChanged) {
       this.db.dayList = this.generateMonthDaysArr(newDate);
       this.view.updateDayMatrixData(calendarView);
+      this.view.updateTodayDay(calendarView);
     }
     this.view.updateChosenDayElem(calendarView);
     this.view.updateCalendarDate(calendarView);
@@ -401,6 +406,7 @@ CalendarRenderer.prototype = {
     this.renderDayMatrix(daypickerDayMatrix);
     this.updateDayMatrixData(daypickerDayMatrix);
     this.updateChosenDayElem(daypickerDayMatrix);
+    this.updateTodayDay(daypickerDayMatrix);
   },
 
   renderDayMatrix: function(parent) {
@@ -456,24 +462,41 @@ CalendarRenderer.prototype = {
   },
 
   updateChosenDayElem: function(parent) {
-    let mod = this.getModClass('daypickerDay', 'active'),
-        lastChosenElem = parent.querySelector('.' + mod),
-        date = this.db.chosenDate,
-        day = date.getDate(),
-        month = date.getMonth(),
-        year = date.getFullYear(),
+    let activeMod = this.getModClass('daypickerDay', 'active'),
+        lastChosenElem = parent.querySelector('.' + activeMod),
         daysArr = this.queryCalElemAll(parent, 'daypickerDay');
     if (lastChosenElem) {
-      lastChosenElem.classList.remove(mod);
+      lastChosenElem.classList.remove(activeMod);
     }
-    let chosenElem = daysArr.filter(function(dayElem) {
-      return dayElem.getAttribute('data-day') == day &&
-              dayElem.getAttribute('data-month') == month &&
-              dayElem.getAttribute('data-year') == year;
-    })[0];
+    let chosenElem = this.getDayElemByDate(daysArr, this.db.chosenDate);
     if (chosenElem) {
-      chosenElem.classList.add(mod);
+      chosenElem.classList.add(activeMod);
     }
+  },
+
+  updateTodayDay: function(parent) {
+    let todayMod = this.getModClass('daypickerDay', 'today'),
+        prevTodayElem = parent.querySelector('.' + todayMod),
+        daysArr = this.queryCalElemAll(parent, 'daypickerDay');
+    if (prevTodayElem) {
+      prevTodayElem.classList.remove(todayMod);
+    }
+    let todayDayElem = this.getDayElemByDate(daysArr, this.db.today);
+    if (todayDayElem) {
+      todayDayElem.classList.add(todayMod);
+    }
+  },
+
+  getDayElemByDate: function(dayElemsArr, date) {
+    let day = date.getDate(),
+        month = date.getMonth(),
+        year = date.getFullYear();
+
+    return dayElemsArr.filter(function(dayElem) {
+              return dayElem.getAttribute('data-day') == day &&
+                    dayElem.getAttribute('data-month') == month &&
+                    dayElem.getAttribute('data-year') == year;
+            })[0];
   },
 
   renderCalendarDate: function(parent) {

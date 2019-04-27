@@ -52,11 +52,11 @@
   cursor: pointer;
 }
 
-.daypicker__day[data-day]:hover {
+.daypicker__day[data-day]:not(.daypicker__day_today):hover {
   border-color: #8bc34a;
 }
 
-.daypicker__day_active {
+.daypicker__day_active:not(.daypicker__day_today) {
   color: white;
 
   background-color: #8bc34a;
@@ -64,4 +64,10 @@
 
 .daypicker__day_faded {
   color: #bebebe;
+}
+
+.daypicker__day_today {
+  color: white;
+
+  background-color: #11b3a2;
 }
