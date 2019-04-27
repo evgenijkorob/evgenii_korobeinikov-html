@@ -45,7 +45,7 @@
 
   transition-timing-function: ease-out;
   transition-duration: 0.5s;
-  transition-property: border-color;
+  transition-property: border-color, background-color, color;
 }
 
 .daypicker__day[data-day] {

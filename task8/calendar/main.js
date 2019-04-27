@@ -203,7 +203,7 @@ CalendarController.prototype = {
 
   setHandlers: function(view) {
     let calendar = view.querySelector('.' + CALENDAR_CLASSES.calendar.classList[0]);
-    calendar.addEventListener('click', function(event) {
+    calendar.addEventListener('mousedown', function(event) {
       let target = event.target.closest('*[data-date-changer]');
       if (!target) {
         return;
@@ -423,7 +423,9 @@ CalendarRenderer.prototype = {
 
   updateDayMatrixData: function(parent) {
     let rows = this.queryCalElemAll(parent, 'daypickerDayMatrixRow'),
-        dayList = this.db.dayList;
+        dayList = this.db.dayList,
+        fadedMod = this.getModClass('daypickerDay', 'faded'),
+        currMonth = this.db.chosenDate.getMonth();
     if (!rows) {
       return;
     }
@@ -435,6 +437,12 @@ CalendarRenderer.prototype = {
       dayElem.setAttribute('data-day', day.number);
       dayElem.setAttribute('data-month', day.month);
       dayElem.setAttribute('data-year', day.year);
+      if (day.month !== currMonth) {
+        dayElem.classList.add(fadedMod);
+      }
+      else {
+        dayElem.classList.remove(fadedMod);
+      }
 
       if (dayIndx % 7 === 6) {
         rowIndx++;

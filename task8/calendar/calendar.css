@@ -4,6 +4,7 @@
 @import url("./yearpicker.css");
 
 .calendar {
+  background: white;
   box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
@@ -42,7 +43,8 @@
   padding: 3rem 1rem 1rem 4rem;
 
   background: #8bc34a;
-  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.76);
+  background-image: url("../assets/4158-autumn-leaves-YOC2001369.jpg");
+  background-size: auto 100%;
 }
 
 .calendar__date-wrapper {
