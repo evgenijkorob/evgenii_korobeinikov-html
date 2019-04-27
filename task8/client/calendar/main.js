@@ -153,16 +153,16 @@ function Calendar() {
   }
 }
 
-function CalendarController() {
-  this.db = new CalendarDB();
-  this.view = new CalendarRenderer(this.db);
-}
-
 function Day(number, weekDay, month, year) {
   this.number = number;
   this.weekDay = weekDay;
   this.month = month;
   this.year = year;
+}
+
+function CalendarController() {
+  this.db = new CalendarDB();
+  this.view = new CalendarRenderer(this.db);
 }
 
 CalendarController.prototype = {
@@ -209,26 +209,31 @@ CalendarController.prototype = {
         return;
       }
       let oldDate = this.db.chosenDate,
-          newDate = new Date(oldDate),
-          yearSub = +target.getAttribute('data-year-sub'),
-          year = target.getAttribute('data-year'),
-          month = target.getAttribute('data-month'),
-          day = target.getAttribute('data-day');
-      if (year) {
-        newDate.setFullYear(year);
-      }
-      else if (yearSub) {
-        newDate.setFullYear(oldDate.getFullYear() + yearSub);
-      }
-      if (month) {
-        newDate.setMonth(month);
-      }
-      if (day) {
-        newDate.setDate(day);
-      }
+          newDate = this.getNewDateFromElement(target, oldDate);
       this.db.chosenDate = newDate;
       this.checkNeedForComponentsUpdate(oldDate, calendar);
     }.bind(this));
+  },
+
+  getNewDateFromElement: function(node, oldDate) {
+    let newDate = new Date(oldDate),
+        yearSub = +node.getAttribute('data-year-sub'),
+        year = node.getAttribute('data-year'),
+        month = node.getAttribute('data-month'),
+        day = node.getAttribute('data-day');
+    if (year) {
+      newDate.setFullYear(year);
+    }
+    else if (yearSub) {
+      newDate.setFullYear(oldDate.getFullYear() + yearSub);
+    }
+    if (month) {
+      newDate.setMonth(month);
+    }
+    if (day) {
+      newDate.setDate(day);
+    }
+    return newDate;
   },
 
   checkNeedForComponentsUpdate: function(oldDate, calendarView) {
