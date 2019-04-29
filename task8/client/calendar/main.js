@@ -211,8 +211,16 @@ CalendarController.prototype = {
       }
       let oldDate = this.db.chosenDate,
           newDate = this.getNewDateFromElement(target, oldDate);
+      if (oldDate === newDate) {
+        return;
+      }
+      let isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
+          isMonthChanged = newDate.getMonth() !== oldDate.getMonth();
       this.db.chosenDate = newDate;
-      this.checkNeedForComponentsUpdate(oldDate, calendar);
+      if (isYearChanged || isMonthChanged) {
+        this.db.dayList = this.generateMonthDaysArr(newDate);
+      }
+      this.view.onChosenDateChange(oldDate, calendar);
     }.bind(this));
   },
 
@@ -239,29 +247,6 @@ CalendarController.prototype = {
     }
     return newDate;
   },
-
-  checkNeedForComponentsUpdate: function(oldDate, calendarView) {
-    let newDate = this.db.chosenDate;
-    if (newDate === oldDate) {
-      return;
-    }
-
-    let isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
-        isMonthChanged = newDate.getMonth() !== oldDate.getMonth();
-    if (isYearChanged) {
-      this.view.updateYearpicker(calendarView);
-    }
-    if (isMonthChanged) {
-      this.view.updateChosenMonth(calendarView);
-    }
-    if (isYearChanged || isMonthChanged) {
-      this.db.dayList = this.generateMonthDaysArr(newDate);
-      this.view.updateDayMatrixData(calendarView);
-      this.view.updateTodayDay(calendarView);
-    }
-    this.view.updateChosenDayElem(calendarView);
-    this.view.updateCalendarDate(calendarView);
-  }
 };
 
 function CalendarDB(today) {
@@ -270,10 +255,6 @@ function CalendarDB(today) {
   this.chosenDate = today;
   this.dayList = [];
 }
-
-CalendarDB.prototype = {
-  constructor: CalendarDB,
-};
 
 CalendarDB.getDateAsStr = function(date) {
   return {
@@ -299,6 +280,28 @@ CalendarRenderer.prototype = {
     this.renderDatePicker(pickerPanel);
     this.renderCalendarDate(pickerPanel);
     return domModel;
+  },
+
+  onChosenDateChange: function(oldDate, calendar) {
+    let newDate = this.db.chosenDate,
+        isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
+        isMonthChanged = newDate.getMonth() !== oldDate.getMonth();
+    if (isYearChanged) {
+      this.updateYearpicker(calendar);
+    }
+    if (isMonthChanged) {
+      this.updateChosenMonth(calendar);
+    }
+    if (isYearChanged || isMonthChanged) {
+      this.updateDayMatrixData(calendar);
+      this.updateTodayDay(calendar);
+    }
+    this.updateChosenDayElem(calendar);
+    this.updateCalendarDate(calendar);
+  },
+
+  onTodayDateChange: function(parent) {
+    this.updateTodayDay(parent);
   },
 
   renderSkeleton: function(parent) {

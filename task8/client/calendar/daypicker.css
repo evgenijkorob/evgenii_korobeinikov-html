@@ -44,7 +44,7 @@
   border-radius: 6px;
 
   transition-timing-function: ease-out;
-  transition-duration: 0.5s;
+  transition-duration: 0.3s;
   transition-property: border-color, background-color, color;
 }
 
