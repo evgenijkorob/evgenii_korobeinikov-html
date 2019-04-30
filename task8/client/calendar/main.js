@@ -218,9 +218,19 @@ WeatherService.prototype = {
   start: function() {
     let weatherConnection, forecastConnection;
     if (this.onWeatherGet) {
-      weatherConnection = new CometListener('api/weather', this._parseRes.bind(this, this._parseWeather, this.onWeatherGet));
+      weatherConnection = new CometListener(
+        'api/weather',
+        this._parseRes.bind(this, this._parseWeather, this.onWeatherGet)
+      );
+    }
+    if (this.onForecastGet) {
+      forecastConnection = new CometListener(
+        'api/forecast',
+        this._parseRes.bind(this, this._parseForecast, this.onForecastGet)
+      );
     }
     weatherConnection.start();
+    forecastConnection.start();
   },
 
   _parseRes: function(parser, callback, resBody) {
@@ -235,6 +245,12 @@ WeatherService.prototype = {
   },
 
   _parseWeather: function(resBody) {
+    let obj = JSON.parse(resBody),
+        weather = obj;
+    return weather;
+  },
+
+  _parseForecast: function(resBody) {
     let obj = JSON.parse(resBody),
         weather = obj;
     return weather;
@@ -332,15 +348,18 @@ CalendarController.prototype = {
   configWeather: function() {
     let weatherProvider = new WeatherService();
     weatherProvider.onWeatherGet = this.onWeatherGet.bind(this);
+    weatherProvider.onForecastGet = this.onForecastGet.bind(this);
     weatherProvider.start();
   },
 
   onWeatherGet: function(data) {
+    console.log('weather received');
     console.dir(data);
   },
 
   onForecastGet: function(data) {
     console.log('forecast received');
+    console.dir(data);
   }
 };
 

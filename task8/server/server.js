@@ -73,14 +73,30 @@ class WeatherService {
     }
   }
 
+  subscribeForForecast(sub, isFirstReq) {
+    let id = Math.random();
+    this._subsContainer['forecast'][id] = sub;
+    if (isFirstReq) {
+      this._notify(id, 'forecast', 'forecast');
+    }
+  }
+
   start() {
     let weatherUpdateInterval = 30 * 60 * 1000,
-        weatherTimer;
+        forecastUpdateInterval = 60 * 60 * 1000,
+        weatherTimer,
+        forecastTimer;
     weatherTimer = this._setTimer(
       weatherUpdateInterval,
       this._provider.getWeather,
       'weather',
       'weather'
+    );
+    forecastTimer = this._setTimer(
+      forecastUpdateInterval,
+      this._provider.getForecast,
+      'forecast',
+      'forecast'
     );
   }
 
@@ -141,7 +157,8 @@ const app = express(),
       weatherService = new WeatherService(),
       SITE_OPTIONS = {
         portnum: 8080
-      };
+      },
+      initialReqHeader = 'Initial-Weather-Request';
 
 weatherService.start();
 
@@ -151,9 +168,13 @@ app.use('/', express.static(
 ));
 
 app.get('/api/weather/*', (req, res) => {
-  weatherService.subscribeForWeather(res, req.header('Initial-Weather-Request'));
+  weatherService.subscribeForWeather(res, req.header(initialReqHeader));
   return;
 });
+
+app.get('/api/forecast/*', (req, res) => {
+  weatherService.subscribeForForecast(res, req.header(initialReqHeader));
+})
 
 app.listen(SITE_OPTIONS.portnum);
 console.log(`Running App on port ${SITE_OPTIONS.portnum}`);
