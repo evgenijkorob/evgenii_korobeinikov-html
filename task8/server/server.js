@@ -3,7 +3,7 @@ const path = require('path'),
       rp = require('request-promise');
 
 
-class WeatherService {
+class WeatherProvider {
   constructor() {
     this._defaultReqOptions = {
       appid: 'ba7b3d5c9e11c5922d86715dbbc8ed28',
@@ -52,25 +52,88 @@ class WeatherService {
   }
 }
 
+class WeatherService {
+  constructor() {
+    this._weather = '';
+    this._forecast = '';
+    this._provider = new WeatherProvider();
+    this._weatherSubs = {};
+    this._forecastSubs = {};
+  }
+
+  subscribeForWeather(sub, isFirstReq) {
+    let id = Math.random();
+    this._weatherSubs[id] = sub;
+    if (isFirstReq) {
+      this._notify(id);
+    }
+  }
+
+  subscribeForForecast(sub) {
+    let id = Math.random();
+    this._forecastSubs[id] = sub;
+  }
+
+  start() {
+    let weatherUpdateInterval = 30 * 60 * 1000,
+        weatherTimer = setTimeout(function update() {
+          this._requestWeather()
+            .then(() => {
+              weatherTimer = setTimeout(update.bind(this), weatherUpdateInterval);
+            });
+        }.bind(this), 0);
+  }
+
+  _requestWeather() {
+    let promise = new Promise(resolve => {
+      this._provider.getWeather()
+        .then(body => {
+          this._weather = body;
+        })
+        .catch(err => {
+          this._weather = '';
+          return Promise.resolve();
+        })
+        .then(() => {
+          this._notifyWeatherSubs();
+          resolve();
+        });
+    });
+    return promise;
+  }
+
+  _notifyWeatherSubs() {
+    let subs = Object.keys(this._weatherSubs);
+    subs.forEach(id => {
+      this._notify(id);
+    });
+  }
+
+  _notify(id) {
+    let sub = this._weatherSubs[id];
+    if (!sub.headersSent) {
+      sub.send(this._weather);
+    }
+    delete this._weatherSubs[id];
+  }
+}
+
 const app = express(),
-      weather = new WeatherService(),
+      weatherService = new WeatherService(),
       SITE_OPTIONS = {
         portnum: 8080
       };
+
+weatherService.start();
 
 app.use('/', express.static(
   path.resolve(__dirname, '../client'),
   SITE_OPTIONS
 ));
 
-app.get('/api/forecast', (req, res) => {
-  weather.getForecast()
-    .then(respJSON => res.send(respJSON));
-});
-
 app.get('/api/weather', (req, res) => {
-  weather.getWeather()
-    .then(respJSON => res.send(respJSON));
+  weatherService.subscribeForWeather(res, req.header('Initial-Weather-Request'));
+  return;
 });
 
 app.listen(SITE_OPTIONS.portnum);

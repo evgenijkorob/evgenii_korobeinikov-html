@@ -161,6 +161,83 @@ function Day(number, weekDay, month, year) {
   this.year = year;
 }
 
+function CometListener(url, resHandler, onerror) {
+  this.url = url;
+  this.resHandler = resHandler;
+  this.onerror = onerror;
+}
+
+CometListener.prototype = {
+  constructor: CometListener,
+
+  _listen: function(url, resHandler, onerror, isInitialReq) {
+    if (!resHandler) {
+      return;
+    }
+    let xhr = new XMLHttpRequest(),
+        listen = this._listen.bind(this, url, resHandler, onerror);
+    xhr.onreadystatechange = function() {
+      if (this.readyState !== 4) {
+        return;
+      }
+      switch(this.status) {
+        case 200:
+          resHandler(this.responseText);
+          listen();
+          return;
+        default:
+          if (onerror) {
+            onerror();
+          }
+          setTimeout(listen.bind(true), 3000);
+      }
+    }
+    xhr.open('GET', url, true);
+    if (isInitialReq) {
+      xhr.setRequestHeader('Initial-Weather-Request', 'true');
+    }
+    xhr.send();
+  },
+
+  start: function() {
+    this._listen(this.url, this.resHandler, this.onerror, true);
+  }
+}
+
+function WeatherService() {
+  this.onWeatherGet = undefined;
+  this.onForecastGet = undefined;
+}
+
+WeatherService.prototype = {
+  constructor: WeatherService,
+
+  start: function() {
+    let weatherConnection, forecastConnection;
+    if (this.onWeatherGet) {
+      weatherConnection = new CometListener('api/weather', this._parseRes.bind(this, this._parseWeather, this.onWeatherGet));
+    }
+    weatherConnection.start();
+  },
+
+  _parseRes: function(parser, callback, resBody) {
+    let result;
+    try {
+      result = parser(resBody);
+    }
+    catch(err) {
+      console.log(err.message);
+    }
+    callback(result);
+  },
+
+  _parseWeather: function(resBody) {
+    let obj = JSON.parse(resBody),
+        weather = obj;
+    return weather;
+  }
+}
+
 function CalendarController() {
   this.db = new CalendarDB();
   this.view = new CalendarRenderer(this.db);
@@ -174,6 +251,7 @@ CalendarController.prototype = {
     this.db.dayList = this.generateMonthDaysArr(this.db.chosenDate);
     calendarView = this.view.render();
     this.setHandlers(calendarView);
+    this.configWeather();
     return calendarView;
   },
 
@@ -247,6 +325,20 @@ CalendarController.prototype = {
     }
     return newDate;
   },
+
+  configWeather: function() {
+    let weatherProvider = new WeatherService();
+    weatherProvider.onWeatherGet = this.onWeatherGet.bind(this);
+    weatherProvider.start();
+  },
+
+  onWeatherGet: function(data) {
+    console.dir(data);
+  },
+
+  onForecastGet: function(data) {
+    console.log('forecast received');
+  }
 };
 
 function CalendarDB(today) {
