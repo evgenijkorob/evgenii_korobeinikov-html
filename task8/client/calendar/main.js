@@ -175,7 +175,8 @@ CometListener.prototype = {
       return;
     }
     let xhr = new XMLHttpRequest(),
-        listen = this._listen.bind(this, url, resHandler, onerror);
+        self = this,
+        listen = self._listen;
     xhr.onreadystatechange = function() {
       if (this.readyState !== 4) {
         return;
@@ -183,13 +184,13 @@ CometListener.prototype = {
       switch(this.status) {
         case 200:
           resHandler(this.responseText);
-          listen();
+          listen.call(self, url, resHandler, onerror, false);
           return;
         default:
           if (onerror) {
             onerror();
           }
-          setTimeout(listen.bind(true), 3000);
+          setTimeout(listen.bind(self, url, resHandler, onerror, true), 3000);
       }
     }
     xhr.open('GET', url, true);

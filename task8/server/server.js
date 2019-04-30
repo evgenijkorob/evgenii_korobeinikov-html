@@ -54,67 +54,86 @@ class WeatherProvider {
 
 class WeatherService {
   constructor() {
-    this._weather = '';
-    this._forecast = '';
     this._provider = new WeatherProvider();
-    this._weatherSubs = {};
-    this._forecastSubs = {};
+    this._dataContainer = {
+      'weather': '',
+      'forecast': ''
+    };
+    this._subsContainer = {
+      'weather': {},
+      'forecast': {}
+    };
   }
 
   subscribeForWeather(sub, isFirstReq) {
     let id = Math.random();
-    this._weatherSubs[id] = sub;
+    this._subsContainer['weather'][id] = sub;
     if (isFirstReq) {
-      this._notify(id);
+      this._notify(id, 'weather', 'weather');
     }
-  }
-
-  subscribeForForecast(sub) {
-    let id = Math.random();
-    this._forecastSubs[id] = sub;
   }
 
   start() {
     let weatherUpdateInterval = 30 * 60 * 1000,
-        weatherTimer = setTimeout(function update() {
-          this._requestWeather()
-            .then(() => {
-              weatherTimer = setTimeout(update.bind(this), weatherUpdateInterval);
-            });
-        }.bind(this), 0);
+        weatherTimer;
+    weatherTimer = this._setTimer(
+      weatherUpdateInterval,
+      this._provider.getWeather,
+      'weather',
+      'weather'
+    );
   }
 
-  _requestWeather() {
+  _setTimer(timeout, dataGetter, subContName, dataContName) {
+    let self = this,
+        timer;
+    function update() {
+      self._request(dataGetter.bind(self._provider), dataContName)
+        .then(() => new Promise(resolve => {
+          self._notifySubs(subContName, dataContName);
+          resolve();
+        }))
+        .then(() => {
+          timer.id = setTimeout(update, timeout);
+        });
+    }
+    update = update.bind(this);
+    timer = {
+      id: setTimeout(update, 0)
+    };
+    return timer;
+  }
+
+  _request(getter, dataContName) {
     let promise = new Promise(resolve => {
-      this._provider.getWeather()
+      getter()
         .then(body => {
-          this._weather = body;
+          this._dataContainer[dataContName] = body;
         })
         .catch(err => {
-          this._weather = '';
+          this._dataContainer[dataContName] = '';
           return Promise.resolve();
         })
         .then(() => {
-          this._notifyWeatherSubs();
           resolve();
         });
     });
     return promise;
   }
 
-  _notifyWeatherSubs() {
-    let subs = Object.keys(this._weatherSubs);
+  _notifySubs(subContainerName, dataContainerName) {
+    let subs = Object.keys(this._subsContainer[subContainerName]);
     subs.forEach(id => {
-      this._notify(id);
+      this._notify(id, subContainerName, dataContainerName);
     });
   }
 
-  _notify(id) {
-    let sub = this._weatherSubs[id];
+  _notify(id, subContName, dataContName) {
+    let sub = this._subsContainer[subContName][id];
     if (!sub.headersSent) {
-      sub.send(this._weather);
+      sub.send(this._dataContainer[dataContName]);
     }
-    delete this._weatherSubs[id];
+    delete this._subsContainer[subContName][id];
   }
 }
 
