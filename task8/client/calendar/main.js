@@ -176,7 +176,9 @@ CometListener.prototype = {
     }
     let xhr = new XMLHttpRequest(),
         self = this,
-        listen = self._listen;
+        listen = self._listen,
+        modifiedUrl = url + '/' + Math.floor(Math.random() * 1000000000000);
+
     xhr.onreadystatechange = function() {
       if (this.readyState !== 4) {
         return;
@@ -193,7 +195,7 @@ CometListener.prototype = {
           setTimeout(listen.bind(self, url, resHandler, onerror, true), 3000);
       }
     }
-    xhr.open('GET', url, true);
+    xhr.open('GET', modifiedUrl, true);
     if (isInitialReq) {
       xhr.setRequestHeader('Initial-Weather-Request', 'true');
     }

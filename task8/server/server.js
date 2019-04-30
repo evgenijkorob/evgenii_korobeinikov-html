@@ -150,7 +150,7 @@ app.use('/', express.static(
   SITE_OPTIONS
 ));
 
-app.get('/api/weather', (req, res) => {
+app.get('/api/weather/*', (req, res) => {
   weatherService.subscribeForWeather(res, req.header('Initial-Weather-Request'));
   return;
 });
