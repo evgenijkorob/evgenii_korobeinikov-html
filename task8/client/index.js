@@ -1,1 +1,1 @@
-document.body.appendChild(new Calendar().show());
+let calendar = new Calendar(document.body);

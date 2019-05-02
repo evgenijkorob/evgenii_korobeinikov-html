@@ -143,15 +143,69 @@ const CALENDAR_CLASSES = {
   calendarDateDay: {
     tag: 'span',
     classList: ['calendar__date-day']
+  },
+  weatherDisplay: {
+    tag: 'div',
+    classList: ['weather-display'],
+    mod: {
+      invisible: '_invisible'
+    }
+  },
+  weatherDisplayInner: {
+    tag: 'div',
+    classList: ['weather-display__inner']
+  },
+  weatherDisplayCity: {
+    tag: 'div',
+    classList: ['weather-display__city']
+  },
+  weatherDisplayTodayWeather: {
+    tag: 'div',
+    classList: ['weather-display__today-weather']
+  },
+  weatherDisplayForecast: {
+    tag: 'div',
+    classList: ['weather-display__forecast']
+  },
+  weatherThumb: {
+    tag: 'div',
+    classList: ['weather-thumb']
+  },
+  weatherThumbInner: {
+    tag: 'div',
+    classList: ['weather-thumb__inner']
+  },
+  weatherThumbDescription: {
+    tag: 'div',
+    classList: ['weather-thumb__description']
+  },
+  weatherThumbTemp: {
+    tag: 'div',
+    classList: ['weather-thumb__temp']
+  },
+  weatherThumbTime: {
+    tag: 'div',
+    classList: ['weather-thumb__time']
+  },
+  weatherIcon: {
+    tag: 'div',
+    classList: ['wi'],
+    mod: {
+      thunderstorm: '-thunderstorm',
+      drizzle: '-sprinkles',
+      rain: '-rain',
+      snow: '-snow',
+      atmosphere: '-windy',
+      clear: '-day-sunny',
+      clouds: '-cloudy',
+      def: '-alien'
+    }
   }
 }
 
-function Calendar() {
+function Calendar(parentNode) {
   let controller = new CalendarController();
-
-  this.show = function() {
-    return controller.showCalendar();
-  }
+  parentNode.appendChild(controller.showCalendar());
 }
 
 function Day(number, weekDay, month, year) {
@@ -159,6 +213,22 @@ function Day(number, weekDay, month, year) {
   this.weekDay = weekDay;
   this.month = month;
   this.year = year;
+}
+
+function Weather(date, temp, description, id) {
+  this.date = date;
+  this.temp = temp;
+  this.description = description;
+  this.id = id;
+}
+
+Weather.fromObject = function(obj) {
+  return new Weather(
+    new Date(obj.dt * 1000),
+    Math.round(obj.main.temp),
+    obj.weather[0].description,
+    obj.weather[0].id
+  );
 }
 
 function CometListener(url, resHandler, onerror) {
@@ -177,7 +247,7 @@ CometListener.prototype = {
     let xhr = new XMLHttpRequest(),
         self = this,
         listen = self._listen,
-        modifiedUrl = url + '/' + Math.floor(Math.random() * 1000000000000);
+        modifiedUrl = url + '/' + Math.random().toString(16).slice(2);
 
     xhr.onreadystatechange = function() {
       if (this.readyState !== 4) {
@@ -245,15 +315,41 @@ WeatherService.prototype = {
   },
 
   _parseWeather: function(resBody) {
-    let obj = JSON.parse(resBody),
-        weather = obj;
-    return weather;
+    let obj = JSON.parse(resBody);
+    return {
+      city: obj.name,
+      country: obj.sys.country,
+      weather: Weather.fromObject(obj)
+    };
   },
 
   _parseForecast: function(resBody) {
     let obj = JSON.parse(resBody),
-        weather = obj;
-    return weather;
+        weatherList = Array.from(obj.list, function(elem) {
+          return Weather.fromObject(elem);
+        }),
+        dayList = [],
+        weatherIndx = 0,
+        currDay,
+        dayIndx = -1;
+    while(weatherIndx < weatherList.length) {
+      currDay = weatherList[weatherIndx].date;
+      dayList.push({
+        day: currDay,
+        forecast: []
+      });
+      dayIndx++;
+      while((weatherIndx < weatherList.length) &&
+            CalendarDB.compareDatesYMD(weatherList[weatherIndx].date, currDay) === 0) {
+        dayList[dayIndx].forecast.push(weatherList[weatherIndx]);
+        weatherIndx++;
+      }
+    }
+    return {
+      city: obj.city.name,
+      country: obj.city.country,
+      dayList: dayList
+    };
   }
 }
 
@@ -299,8 +395,7 @@ CalendarController.prototype = {
     return list;
   },
 
-  setHandlers: function(view) {
-    let calendar = view.querySelector('.' + CALENDAR_CLASSES.calendar.classList[0]);
+  setHandlers: function(calendar) {
     calendar.addEventListener('mousedown', function(event) {
       let target = event.target.closest('*[data-date-changer]');
       if (!target) {
@@ -308,7 +403,7 @@ CalendarController.prototype = {
       }
       let oldDate = this.db.chosenDate,
           newDate = this.getNewDateFromElement(target, oldDate);
-      if (oldDate === newDate) {
+      if (CalendarDB.compareDatesYMD(oldDate, newDate) === 0) {
         return;
       }
       let isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
@@ -353,21 +448,28 @@ CalendarController.prototype = {
   },
 
   onWeatherGet: function(data) {
-    console.log('weather received');
-    console.dir(data);
+    this.db.todayWeather = data.weather;
+    this.db.city = data.city;
+    this.db.country = data.country;
+    this.view.updateWeatherDisplay();
   },
 
   onForecastGet: function(data) {
-    console.log('forecast received');
-    console.dir(data);
+    this.db.forecast = data.dayList;
+    this.db.city = data.city;
+    this.db.country = data.country;
+    this.view.updateWeatherDisplay();
   }
 };
 
-function CalendarDB(today) {
-  today = today || new Date();
+function CalendarDB() {
+  today = new Date();
   this.today = today;
   this.chosenDate = today;
   this.dayList = [];
+  this.city = undefined;
+  this.todayWeather = undefined;
+  this.forecast = undefined;
 }
 
 CalendarDB.getDateAsStr = function(date) {
@@ -379,21 +481,38 @@ CalendarDB.getDateAsStr = function(date) {
   };
 };
 
+CalendarDB.compareDatesYMD = function(date1, date2) {
+  date1 = CalendarDB.getDateMidnight(date1);
+  date2 = CalendarDB.getDateMidnight(date2);
+  return date1 - date2;
+}
+
+CalendarDB.getDateMidnight = function(date) {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+}
+
 function CalendarRenderer(database) {
   this.db = database;
+  this.model = undefined;
 }
 
 CalendarRenderer.prototype = {
   constructor: CalendarRenderer,
 
   render: function() {
-    let domModel = document.createDocumentFragment();
+    let domModel = document.createElement('div');
     this.renderSkeleton(domModel);
     let pickerPanel = this.queryCalElemAll(domModel, 'calendarPickerPanel')[0],
         additionalPanel = this.queryCalElemAll(domModel, 'calendarAdditionalPanel')[0];
     this.renderDatePicker(pickerPanel);
     this.renderCalendarDate(pickerPanel);
-    return domModel;
+    this.renderWeatherDisplay(additionalPanel);
+    this.model = domModel.children[0];
+    return this.model;
   },
 
   onChosenDateChange: function(oldDate, calendar) {
@@ -412,6 +531,7 @@ CalendarRenderer.prototype = {
     }
     this.updateChosenDayElem(calendar);
     this.updateCalendarDate(calendar);
+    this.updateWeatherDisplay();
   },
 
   onTodayDateChange: function(parent) {
@@ -641,6 +761,135 @@ CalendarRenderer.prototype = {
     if (calendarDateDay) {
       calendarDateDay.textContent = currDateAsStr.day;
     }
+  },
+
+  renderWeatherDisplay: function(parent) {
+    let display = this.createCalElem('weatherDisplay'),
+        inner = this.createCalElem('weatherDisplayInner'),
+        city = this.createCalElem('weatherDisplayCity'),
+        todayWeather = this.createCalElem('weatherDisplayTodayWeather'),
+        forecast = this.createCalElem('weatherDisplayForecast'),
+        invisibleMod = this.getModClass('weatherDisplay', 'invisible');
+
+    parent.appendChild(display);
+    display.appendChild(inner);
+    inner.append(city, todayWeather, forecast);
+    display.classList.add(invisibleMod);
+  },
+
+  updateWeatherDisplay: function() {
+    let display = this.queryCalElemAll(this.model, 'weatherDisplay')[0],
+        todayWeather = this.db.todayWeather,
+        forecast = this.db.forecast,
+        invisibleMod = this.getModClass('weatherDisplay', 'invisible');
+
+    if (!todayWeather && !forecast) {
+      display.classList.add(invisibleMod);
+      return;
+    }
+
+    let isForecastUpdated = this.updateForecast(display),
+        isTodayWeatherUpdated = this.updateTodayWeather(display);
+    if (!isForecastUpdated && !isTodayWeatherUpdated) {
+      display.classList.add(invisibleMod);
+    }
+    else {
+      this.updateCity(display);
+      display.classList.remove(invisibleMod);
+    }
+  },
+
+  updateTodayWeather: function(parent) {
+    let weatherDisplay = this.queryCalElemAll(parent, 'weatherDisplayTodayWeather')[0],
+        oldThumbs = this.queryCalElemAll(weatherDisplay, 'weatherThumb');
+
+    oldThumbs.forEach(function(thumb) {
+      weatherDisplay.removeChild(thumb);
+    });
+    if (CalendarDB.compareDatesYMD(this.db.chosenDate, this.db.today) !== 0) {
+      return false;
+    }
+    weatherDisplay.appendChild(this.createWeatherThumb(this.db.todayWeather));
+    return true;
+  },
+
+  updateForecast: function(parent) {
+    let forecast = this.db.forecast,
+        forecastDisplay = this.queryCalElemAll(parent, 'weatherDisplayForecast')[0];
+    this.queryCalElemAll(forecastDisplay, 'weatherThumb')
+    .forEach(function(thumb) {
+      forecastDisplay.removeChild(thumb);
+    });
+    if (!forecast) {
+      return false;
+    }
+    let currDay = this.db.forecast.filter(function(elem) {
+      return CalendarDB.compareDatesYMD(this.db.chosenDate, elem.day) === 0;
+    }, this)[0];
+    if (!currDay) {
+      return false;
+    }
+    currDay.forecast.forEach(function(weather) {
+      forecastDisplay.appendChild(this.createWeatherThumb(weather));
+    }, this);
+    return true;
+  },
+
+  updateCity: function(parent) {
+    let cityDisplay = this.queryCalElemAll(parent, 'weatherDisplayCity')[0];
+    cityDisplay.textContent = this.db.city + ', ' + this.db.country;
+  },
+
+  createWeatherThumb: function(weather) {
+    let thumb = this.createCalElem('weatherThumb'),
+        inner = this.createCalElem('weatherThumbInner'),
+        description = this.createCalElem('weatherThumbDescription'),
+        temp = this.createCalElem('weatherThumbTemp'),
+        time = this.createCalElem('weatherThumbTime'),
+        icon = this.createWeatherIcon(weather.id),
+        timeFormatter = new Intl.DateTimeFormat("ru", {
+          hour: "numeric",
+          minute: "numeric"
+        });
+
+    thumb.appendChild(inner);
+    inner.append(description, temp, time, icon);
+    description.textContent = weather.description;
+    temp.textContent = weather.temp + ' \u00B0C';
+    time.textContent = timeFormatter.format(weather.date);
+    return thumb;
+  },
+
+  createWeatherIcon: function(id) {
+    let icon = this.createCalElem('weatherIcon'),
+        group = Math.floor(id / 100),
+        modName,
+        mod;
+    switch(group) {
+      case 2:
+        modName = 'thunderstorm';
+        break;
+      case 3:
+        modName = 'drizzle';
+        break;
+      case 5:
+        modName = 'rain';
+        break;
+      case 6:
+        modName = 'snow';
+        break;
+      case 7:
+        modName = 'atmosphere';
+        break;
+      case 8:
+        modName = (id === 800) ? 'clear' : 'clouds';
+        break;
+      default:
+        modName = 'def';
+    }
+    mod = this.getModClass('weatherIcon', modName);
+    icon.classList.add(mod);
+    return icon;
   }
 }
 

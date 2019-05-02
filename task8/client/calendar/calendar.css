@@ -1,7 +1,10 @@
+@import url("./weather-icons.css");
 @import url("./datepicker.css");
 @import url("./monthpicker.css");
 @import url("./daypicker.css");
 @import url("./yearpicker.css");
+@import url("./weather-display.css");
+@import url("./weather-thumb.css");
 
 .calendar {
   background: white;
@@ -47,6 +50,10 @@
   background: #8bc34a;
   background-image: url("../assets/4158-autumn-leaves-YOC2001369.jpg");
   background-size: auto 100%;
+  flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }
 
 .calendar__date-wrapper {

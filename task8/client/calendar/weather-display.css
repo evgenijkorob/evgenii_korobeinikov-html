@@ -1,0 +1,7 @@
+.weather-display {
+  background-color: rgba(0, 0, 0, 0.66);
+}
+
+.weather-display_invisible {
+  display: none;
+}
