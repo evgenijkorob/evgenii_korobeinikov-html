@@ -17,7 +17,7 @@
   margin-right: 1rem;
 
   font-size: 1rem;
-  color: #8bc34a;
+  color: #589d62;
 }
 
 .yearpicker__increaser {
@@ -30,7 +30,7 @@
 }
 
 .yearpicker__increaser:active {
-  background-color: rgba(140, 238, 27, 0.33);
+  background-color: rgba(88, 157, 98, 0.22);
 }
 
 .yearpicker__decreaser {
@@ -43,5 +43,5 @@
 }
 
 .yearpicker__decreaser:active {
-  background-color: rgba(140, 238, 27, 0.33);
+  background-color: rgba(88, 157, 98, 0.22);
 }
