@@ -340,7 +340,7 @@ WeatherService.prototype = {
       });
       dayIndx++;
       while((weatherIndx < weatherList.length) &&
-            CalendarDB.compareDatesYMD(weatherList[weatherIndx].date, currDay) === 0) {
+            CalendarDB.isEqualDatesYMD(weatherList[weatherIndx].date, currDay)) {
         dayList[dayIndx].forecast.push(weatherList[weatherIndx]);
         weatherIndx++;
       }
@@ -403,7 +403,7 @@ CalendarController.prototype = {
       }
       let oldDate = this.db.chosenDate,
           newDate = this.getNewDateFromElement(target, oldDate);
-      if (CalendarDB.compareDatesYMD(oldDate, newDate) === 0) {
+      if (CalendarDB.isEqualDatesYMD(oldDate, newDate)) {
         return;
       }
       let isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
@@ -481,10 +481,10 @@ CalendarDB.getDateAsStr = function(date) {
   };
 };
 
-CalendarDB.compareDatesYMD = function(date1, date2) {
+CalendarDB.isEqualDatesYMD = function(date1, date2) {
   date1 = CalendarDB.getDateMidnight(date1);
   date2 = CalendarDB.getDateMidnight(date2);
-  return date1 - date2;
+  return (date1 - date2) === 0;
 }
 
 CalendarDB.getDateMidnight = function(date) {
@@ -806,10 +806,10 @@ CalendarRenderer.prototype = {
     oldThumbs.forEach(function(thumb) {
       weatherDisplay.removeChild(thumb);
     });
-    if (CalendarDB.compareDatesYMD(this.db.chosenDate, this.db.today) !== 0) {
+    if (!CalendarDB.isEqualDatesYMD(this.db.chosenDate, this.db.today)) {
       return false;
     }
-    weatherDisplay.appendChild(this.createWeatherThumb(this.db.todayWeather));
+    weatherDisplay.appendChild(this.createWeatherThumb(this.db.todayWeather, true));
     return true;
   },
 
@@ -824,13 +824,13 @@ CalendarRenderer.prototype = {
       return false;
     }
     let currDay = this.db.forecast.filter(function(elem) {
-      return CalendarDB.compareDatesYMD(this.db.chosenDate, elem.day) === 0;
+      return CalendarDB.isEqualDatesYMD(this.db.chosenDate, elem.day);
     }, this)[0];
     if (!currDay) {
       return false;
     }
     currDay.forecast.forEach(function(weather) {
-      forecastDisplay.appendChild(this.createWeatherThumb(weather));
+      forecastDisplay.appendChild(this.createWeatherThumb(weather, false));
     }, this);
     return true;
   },
@@ -840,10 +840,9 @@ CalendarRenderer.prototype = {
     cityDisplay.textContent = this.db.city + ', ' + this.db.country;
   },
 
-  createWeatherThumb: function(weather) {
+  createWeatherThumb: function(weather, hasDescription) {
     let thumb = this.createCalElem('weatherThumb'),
         inner = this.createCalElem('weatherThumbInner'),
-        description = this.createCalElem('weatherThumbDescription'),
         temp = this.createCalElem('weatherThumbTemp'),
         time = this.createCalElem('weatherThumbTime'),
         icon = this.createWeatherIcon(weather.id),
@@ -853,8 +852,13 @@ CalendarRenderer.prototype = {
         });
 
     thumb.appendChild(inner);
-    inner.append(description, temp, time, icon);
-    description.textContent = weather.description;
+    inner.append(temp, time, icon);
+    if (hasDescription) {
+      let description = this.createCalElem('weatherThumbDescription');
+      description.textContent = weather.description;
+      inner.appendChild(description);
+    }
+
     temp.textContent = weather.temp + ' \u00B0C';
     time.textContent = timeFormatter.format(weather.date);
     return thumb;
