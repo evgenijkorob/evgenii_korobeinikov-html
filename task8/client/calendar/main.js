@@ -146,7 +146,7 @@ const CALENDAR_CLASSES = {
   },
   weatherDisplay: {
     tag: 'div',
-    classList: ['weather-display'],
+    classList: ['weather-display', 'calendar__weather-display'],
     mod: {
       invisible: '_invisible'
     }
@@ -189,7 +189,7 @@ const CALENDAR_CLASSES = {
   },
   weatherIcon: {
     tag: 'div',
-    classList: ['wi'],
+    classList: ['wi', 'calendar__weather-icon'],
     mod: {
       thunderstorm: '-thunderstorm',
       drizzle: '-sprinkles',
