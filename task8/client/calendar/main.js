@@ -367,7 +367,21 @@ CalendarController.prototype = {
     calendarView = this.view.render();
     this.setHandlers(calendarView);
     this.configWeather();
+    this.runTodayDateAutoupdater();
     return calendarView;
+  },
+
+  runTodayDateAutoupdater: function() {
+    let timer;
+    timer = setTimeout(function updater() {
+      let newDate = new Date();
+      console.log(newDate);
+      if (!CalendarDB.isEqualDatesYMD(this.db.today, newDate)) {
+        this.db.today = newDate;
+        this.view.onTodayDateChange();
+      }
+      timer = setTimeout(updater.bind(this), 60 * 1000);
+    }.bind(this), 0);
   },
 
   generateMonthDaysArr: function(date) {
@@ -412,7 +426,7 @@ CalendarController.prototype = {
       if (isYearChanged || isMonthChanged) {
         this.db.dayList = this.generateMonthDaysArr(newDate);
       }
-      this.view.onChosenDateChange(oldDate, calendar);
+      this.view.onChosenDateChange(oldDate);
     }.bind(this));
   },
 
@@ -515,8 +529,9 @@ CalendarRenderer.prototype = {
     return this.model;
   },
 
-  onChosenDateChange: function(oldDate, calendar) {
-    let newDate = this.db.chosenDate,
+  onChosenDateChange: function(oldDate) {
+    let calendar = this.model,
+        newDate = this.db.chosenDate,
         isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
         isMonthChanged = newDate.getMonth() !== oldDate.getMonth();
     if (isYearChanged) {
@@ -527,15 +542,15 @@ CalendarRenderer.prototype = {
     }
     if (isYearChanged || isMonthChanged) {
       this.updateDayMatrixData(calendar);
-      this.updateTodayDay(calendar);
+      this.updateTodayDay();
     }
     this.updateChosenDayElem(calendar);
     this.updateCalendarDate(calendar);
     this.updateWeatherDisplay();
   },
 
-  onTodayDateChange: function(parent) {
-    this.updateTodayDay(parent);
+  onTodayDateChange: function() {
+    this.updateTodayDay();
   },
 
   renderSkeleton: function(parent) {
@@ -712,6 +727,9 @@ CalendarRenderer.prototype = {
   },
 
   updateTodayDay: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let todayMod = this.getModClass('daypickerDay', 'today'),
         prevTodayElem = parent.querySelector('.' + todayMod),
         daysArr = this.queryCalElemAll(parent, 'daypickerDay');
@@ -806,7 +824,7 @@ CalendarRenderer.prototype = {
     oldThumbs.forEach(function(thumb) {
       weatherDisplay.removeChild(thumb);
     });
-    if (!CalendarDB.isEqualDatesYMD(this.db.chosenDate, this.db.today)) {
+    if (!CalendarDB.isEqualDatesYMD(this.db.chosenDate, this.db.todayWeather.date)) {
       return false;
     }
     weatherDisplay.appendChild(this.createWeatherThumb(this.db.todayWeather, true));

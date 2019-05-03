@@ -82,7 +82,7 @@ class WeatherService {
   }
 
   start() {
-    let weatherUpdateInterval = 30 * 60 * 1000,
+    let weatherUpdateInterval = 15 * 60 * 1000,
         forecastUpdateInterval = 60 * 60 * 1000,
         weatherTimer,
         forecastTimer;
