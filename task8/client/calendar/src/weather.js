@@ -42,6 +42,9 @@ CometListener.prototype = {
         resHandler(this.responseText);
       }
       listen.call(self, url, resHandler, false);
+    };
+    xhr.ontimeout = function() {
+      listen.call(self, url, resHandler, false);
     }
     xhr.open('GET', modifiedUrl, true);
     if (isInitialReq) {
@@ -70,15 +73,15 @@ WeatherService.prototype = {
         'api/weather',
         this._parseRes.bind(this, this._parseWeather, this.onWeatherGet)
       );
+      weatherConnection.start();
     }
     if (this.onForecastGet) {
       forecastConnection = new CometListener(
         'api/forecast',
         this._parseRes.bind(this, this._parseForecast, this.onForecastGet)
       );
+      forecastConnection.start();
     }
-    weatherConnection.start();
-    forecastConnection.start();
   },
 
   _parseRes: function(parser, callback, resBody) {

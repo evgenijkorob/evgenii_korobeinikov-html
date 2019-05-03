@@ -63,22 +63,41 @@ class WeatherService {
       'weather': {},
       'forecast': {}
     };
+    this.initialReqHeader = 'Initial-Weather-Request';
   }
 
-  subscribeForWeather(sub, isFirstReq) {
+  makeSub(subReq, subRes, id, purpose) {
+    let obj = {
+          req: subReq,
+          res: subRes
+        };
+    let callback = this.onSubReqClose.bind(this, obj, id, purpose);
+    obj.req.on('close', callback);
+    obj.req.on('aborted', callback);
+    return obj;
+  }
+
+  onSubReqClose(sub, id, purpose) {
+    if(!sub.res.headersSent) {
+      sub.res.sendStatus(500);
+    }
+    delete this._subsContainer[purpose][id];
+  }
+
+  subscribe(purpose, subReq, subRes) {
     let id = Math.random();
-    this._subsContainer['weather'][id] = sub;
-    if (isFirstReq) {
-      this._notify(id, 'weather', 'weather');
+    this._subsContainer[purpose][id] = this.makeSub(subReq, subRes, id, purpose);
+    if (subReq.header(this.initialReqHeader)) {
+      this._notify(id, purpose, purpose);
     }
   }
 
-  subscribeForForecast(sub, isFirstReq) {
-    let id = Math.random();
-    this._subsContainer['forecast'][id] = sub;
-    if (isFirstReq) {
-      this._notify(id, 'forecast', 'forecast');
-    }
+  subscribeForWeather(subReq, subRes) {
+    this.subscribe('weather', subReq, subRes);
+  }
+
+  subscribeForForecast(subReq, subRes) {
+    this.subscribe('forecast', subReq, subRes);
   }
 
   start() {
@@ -146,8 +165,8 @@ class WeatherService {
 
   _notify(id, subContName, dataContName) {
     let sub = this._subsContainer[subContName][id];
-    if (!sub.headersSent) {
-      sub.send(this._dataContainer[dataContName]);
+    if (!sub.res.headersSent) {
+      sub.res.send(this._dataContainer[dataContName]);
     }
     delete this._subsContainer[subContName][id];
   }
@@ -157,8 +176,7 @@ const app = express(),
       weatherService = new WeatherService(),
       SITE_OPTIONS = {
         portnum: 8080
-      },
-      initialReqHeader = 'Initial-Weather-Request';
+      };
 
 weatherService.start();
 
@@ -168,13 +186,14 @@ app.use('/', express.static(
 ));
 
 app.get('/api/weather/*', (req, res) => {
-  weatherService.subscribeForWeather(res, req.header(initialReqHeader));
+  weatherService.subscribeForWeather(req, res);
   return;
 });
 
 app.get('/api/forecast/*', (req, res) => {
-  weatherService.subscribeForForecast(res, req.header(initialReqHeader));
-})
+  weatherService.subscribeForForecast(req, res);
+  return;
+});
 
 app.listen(SITE_OPTIONS.portnum);
 console.log(`Running App on port ${SITE_OPTIONS.portnum}`);
