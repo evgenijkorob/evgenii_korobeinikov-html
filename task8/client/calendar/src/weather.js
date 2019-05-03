@@ -29,24 +29,19 @@ CometListener.prototype = {
     let xhr = new XMLHttpRequest(),
         self = this,
         listen = self._listen,
-        modifiedUrl = url + '/' + Math.random().toString(16).slice(2);
+        modifiedUrl = url + '/' + Math.random().toString(16).slice(2),
+        timeout = 2 * 60 * 1000;
 
-    xhr.onreadystatechange = function() {
-      if (this.readyState !== 4) {
-        return;
+    xhr.timeout = timeout;
+    xhr.onerror = function() {
+      resHandler('');
+      setTimeout(listen.bind(self, url, resHandler, true), 5000);
+    };
+    xhr.onload = function() {
+      if (this.status === 200) {
+        resHandler(this.responseText);
       }
-      switch(this.status) {
-        case 200:
-          resHandler(this.responseText);
-          listen.call(self, url, resHandler, false);
-          return;
-        case 0:
-          listen.call(self, url, resHandler, false);
-          return;
-        default:
-          resHandler('');
-          setTimeout(listen.bind(self, url, resHandler, true), 3000);
-      }
+      listen.call(self, url, resHandler, false);
     }
     xhr.open('GET', modifiedUrl, true);
     if (isInitialReq) {
@@ -91,9 +86,7 @@ WeatherService.prototype = {
     try {
       result = parser(resBody);
     }
-    catch(err) {
-      console.log(err.message);
-    }
+    catch(err) {}
     callback(result);
   },
 
