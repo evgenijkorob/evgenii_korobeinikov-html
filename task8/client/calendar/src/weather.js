@@ -14,16 +14,15 @@ Weather.fromObject = function(obj) {
   );
 }
 
-function CometListener(url, resHandler, onerror) {
+function CometListener(url, resHandler) {
   this.url = url;
   this.resHandler = resHandler;
-  this.onerror = onerror;
 }
 
 CometListener.prototype = {
   constructor: CometListener,
 
-  _listen: function(url, resHandler, onerror, isInitialReq) {
+  _listen: function(url, resHandler, isInitialReq) {
     if (!resHandler) {
       return;
     }
@@ -39,13 +38,14 @@ CometListener.prototype = {
       switch(this.status) {
         case 200:
           resHandler(this.responseText);
-          listen.call(self, url, resHandler, onerror, false);
+          listen.call(self, url, resHandler, false);
+          return;
+        case 0:
+          listen.call(self, url, resHandler, false);
           return;
         default:
-          if (onerror) {
-            onerror();
-          }
-          setTimeout(listen.bind(self, url, resHandler, onerror, true), 3000);
+          resHandler('');
+          setTimeout(listen.bind(self, url, resHandler, true), 3000);
       }
     }
     xhr.open('GET', modifiedUrl, true);
@@ -56,7 +56,7 @@ CometListener.prototype = {
   },
 
   start: function() {
-    this._listen(this.url, this.resHandler, this.onerror, true);
+    this._listen(this.url, this.resHandler, true);
   }
 }
 

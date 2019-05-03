@@ -113,6 +113,11 @@ CalendarController.prototype = {
   },
 
   onWeatherGet: function(data) {
+    if (!data) {
+      this.db.todayWeather = undefined;
+      this.view.updateWeatherDisplay();
+      return;
+    }
     this.db.todayWeather = data.weather;
     this.db.city = data.city;
     this.db.country = data.country;
@@ -120,6 +125,11 @@ CalendarController.prototype = {
   },
 
   onForecastGet: function(data) {
+    if (!data) {
+      this.db.forecast = undefined;
+      this.view.updateWeatherDisplay();
+      return;
+    }
     this.db.forecast = data.dayList;
     this.db.city = data.city;
     this.db.country = data.country;

@@ -516,6 +516,9 @@ CalendarRenderer.prototype = {
     oldThumbs.forEach(function(thumb) {
       weatherDisplay.removeChild(thumb);
     });
+    if (!this.db.todayWeather) {
+      return false;
+    }
     if (!CalendarDB.isEqualDatesYMD(this.db.chosenDate, this.db.todayWeather.date)) {
       return false;
     }
