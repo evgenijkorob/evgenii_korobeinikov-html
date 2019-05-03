@@ -2,6 +2,7 @@
   padding: 1rem;
   display: flex;
   flex-flow: column;
+  max-width: 10rem;
 }
 
 .weather-thumb__temp {
