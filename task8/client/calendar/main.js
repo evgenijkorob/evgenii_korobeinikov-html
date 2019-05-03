@@ -375,7 +375,6 @@ CalendarController.prototype = {
     let timer;
     timer = setTimeout(function updater() {
       let newDate = new Date();
-      console.log(newDate);
       if (!CalendarDB.isEqualDatesYMD(this.db.today, newDate)) {
         this.db.today = newDate;
         this.view.onTodayDateChange();
@@ -530,22 +529,21 @@ CalendarRenderer.prototype = {
   },
 
   onChosenDateChange: function(oldDate) {
-    let calendar = this.model,
-        newDate = this.db.chosenDate,
+    let newDate = this.db.chosenDate,
         isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
         isMonthChanged = newDate.getMonth() !== oldDate.getMonth();
     if (isYearChanged) {
-      this.updateYearpicker(calendar);
+      this.updateYearpicker();
     }
     if (isMonthChanged) {
-      this.updateChosenMonth(calendar);
+      this.updateChosenMonth();
     }
     if (isYearChanged || isMonthChanged) {
-      this.updateDayMatrixData(calendar);
+      this.updateDayMatrixData();
       this.updateTodayDay();
     }
-    this.updateChosenDayElem(calendar);
-    this.updateCalendarDate(calendar);
+    this.updateChosenDayElem();
+    this.updateCalendarDate();
     this.updateWeatherDisplay();
   },
 
@@ -593,6 +591,9 @@ CalendarRenderer.prototype = {
   },
 
   updateYearpicker: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let yearElem = this.queryCalElemAll(parent, 'yearpickerYear')[0],
         year = this.db.chosenDate.getFullYear();
     if (yearElem) {
@@ -621,6 +622,9 @@ CalendarRenderer.prototype = {
   },
 
   updateChosenMonth: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let mod = this.getModClass('monthpickerElement', 'active'),
         lastChosenMonth = parent.querySelector('.' + mod),
         elems = this.queryCalElemAll(parent, 'monthpickerElement'),
@@ -685,6 +689,9 @@ CalendarRenderer.prototype = {
   },
 
   updateDayMatrixData: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let rows = this.queryCalElemAll(parent, 'daypickerDayMatrixRow'),
         dayList = this.db.dayList,
         fadedMod = this.getModClass('daypickerDay', 'faded'),
@@ -714,6 +721,9 @@ CalendarRenderer.prototype = {
   },
 
   updateChosenDayElem: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let activeMod = this.getModClass('daypickerDay', 'active'),
         lastChosenElem = parent.querySelector('.' + activeMod),
         daysArr = this.queryCalElemAll(parent, 'daypickerDay');
@@ -765,6 +775,9 @@ CalendarRenderer.prototype = {
   },
 
   updateCalendarDate: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let calendarDateWeek = this.queryCalElemAll(parent, 'calendarDateWeek')[0],
         calendarDateMonth = this.queryCalElemAll(parent, 'calendarDateMonth')[0],
         calendarDateDay = this.queryCalElemAll(parent, 'calendarDateDay')[0],
@@ -795,8 +808,11 @@ CalendarRenderer.prototype = {
     display.classList.add(invisibleMod);
   },
 
-  updateWeatherDisplay: function() {
-    let display = this.queryCalElemAll(this.model, 'weatherDisplay')[0],
+  updateWeatherDisplay: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
+    let display = this.queryCalElemAll(parent, 'weatherDisplay')[0],
         todayWeather = this.db.todayWeather,
         forecast = this.db.forecast,
         invisibleMod = this.getModClass('weatherDisplay', 'invisible');
@@ -818,6 +834,9 @@ CalendarRenderer.prototype = {
   },
 
   updateTodayWeather: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let weatherDisplay = this.queryCalElemAll(parent, 'weatherDisplayTodayWeather')[0],
         oldThumbs = this.queryCalElemAll(weatherDisplay, 'weatherThumb');
 
@@ -832,6 +851,9 @@ CalendarRenderer.prototype = {
   },
 
   updateForecast: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let forecast = this.db.forecast,
         forecastDisplay = this.queryCalElemAll(parent, 'weatherDisplayForecast')[0];
     this.queryCalElemAll(forecastDisplay, 'weatherThumb')
@@ -854,6 +876,9 @@ CalendarRenderer.prototype = {
   },
 
   updateCity: function(parent) {
+    if (!parent) {
+      parent = this.model;
+    }
     let cityDisplay = this.queryCalElemAll(parent, 'weatherDisplayCity')[0];
     cityDisplay.textContent = this.db.city + ', ' + this.db.country;
   },
