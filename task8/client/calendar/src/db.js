@@ -43,9 +43,9 @@ CalendarDB.getDayNames = function() {
 
 CalendarDB.getDateAsStr = function(date) {
   return {
-    weekDay: CalendarDB.getDayNames[date.getDay()],
+    weekDay: CalendarDB.getDayNames()[date.getDay()],
     day: "" + date.getDate(),
-    month: CalendarDB.getMonthNames[date.getMonth()],
+    month: CalendarDB.getMonthNames()[date.getMonth()],
     year: "" + date.getFullYear()
   };
 };
