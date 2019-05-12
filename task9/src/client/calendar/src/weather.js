@@ -32,7 +32,6 @@ CometListener.prototype = {
         modifiedUrl = url + '/' + Math.random().toString(16).slice(2),
         timeout = 2 * 60 * 1000;
 
-    xhr.timeout = timeout;
     xhr.onerror = function() {
       resHandler('');
       setTimeout(listen.bind(self, url, resHandler, true), 5000);
@@ -50,6 +49,7 @@ CometListener.prototype = {
     if (isInitialReq) {
       xhr.setRequestHeader('Initial-Weather-Request', 'true');
     }
+    xhr.timeout = timeout;
     xhr.send();
   },
 

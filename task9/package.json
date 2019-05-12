@@ -5,8 +5,8 @@
   "main": "./server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./server/server.js",
-    "watch": "nodemon --watch server"
+    "start": "node ./prod/server/server.js",
+    "watch": "nodemon --watch ./prod/server"
   },
   "author": "",
   "license": "ISC",
