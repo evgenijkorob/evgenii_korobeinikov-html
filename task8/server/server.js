@@ -63,41 +63,41 @@ class WeatherService {
       'weather': {},
       'forecast': {}
     };
-    this.initialReqHeader = 'Initial-Weather-Request';
+    this._initialReqHeader = 'Initial-Weather-Request';
   }
 
-  makeSub(subReq, subRes, id, purpose) {
+  _makeSub(subReq, subRes, id, purpose) {
     let obj = {
           req: subReq,
           res: subRes
         };
-    let callback = this.onSubReqClose.bind(this, obj, id, purpose);
+    let callback = this._onSubReqClose.bind(this, obj, id, purpose);
     obj.req.on('close', callback);
     obj.req.on('aborted', callback);
     return obj;
   }
 
-  onSubReqClose(sub, id, purpose) {
+  _onSubReqClose(sub, id, purpose) {
     if(!sub.res.headersSent) {
       sub.res.sendStatus(500);
     }
     delete this._subsContainer[purpose][id];
   }
 
-  subscribe(purpose, subReq, subRes) {
+  _subscribe(purpose, subReq, subRes) {
     let id = Math.random();
-    this._subsContainer[purpose][id] = this.makeSub(subReq, subRes, id, purpose);
-    if (subReq.header(this.initialReqHeader)) {
+    this._subsContainer[purpose][id] = this._makeSub(subReq, subRes, id, purpose);
+    if (subReq.header(this._initialReqHeader)) {
       this._notify(id, purpose, purpose);
     }
   }
 
   subscribeForWeather(subReq, subRes) {
-    this.subscribe('weather', subReq, subRes);
+    this._subscribe('weather', subReq, subRes);
   }
 
   subscribeForForecast(subReq, subRes) {
-    this.subscribe('forecast', subReq, subRes);
+    this._subscribe('forecast', subReq, subRes);
   }
 
   start() {
