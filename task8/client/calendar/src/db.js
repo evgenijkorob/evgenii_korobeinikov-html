@@ -1,44 +1,60 @@
-const MONTH_NAMES = [
-  'january',
-  'febrary',
-  'march',
-  'april',
-  'may',
-  'june',
-  'july',
-  'august',
-  'september',
-  'october',
-  'november',
-  'december'
-];
-
-const DAY_NAMES = [
-  'sunday',
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday'
-];
-
 function CalendarDB() {
   today = new Date();
   this.today = today;
   this.chosenDate = today;
   this.dayList = [];
-  this.city = undefined;
-  this.todayWeather = undefined;
-  this.forecast = undefined;
+  this.city = null;
+  this.todayWeather = null;
+  this.forecast = null;
 }
 
+CalendarDB._monthNames = null;
+CalendarDB._dayNames = null;
+
 CalendarDB.getMonthNames = function() {
-  return MONTH_NAMES;
+  if (CalendarDB._monthNames) {
+    return CalendarDB._monthNames;
+  }
+  let counter = new Date(),
+      currYear = counter.getFullYear(),
+      locale = CalendarDB.getNavigatorLanguage(),
+      formatter = new Intl.DateTimeFormat(locale, { month: 'long' }),
+      names = [];
+
+  counter.setMonth(0);
+  while(counter.getFullYear() === currYear) {
+    names.push(formatter.format(counter));
+    counter.setMonth(counter.getMonth() + 1);
+  };
+  CalendarDB._monthNames = names;
+  return names;
 };
 
 CalendarDB.getDayNames = function() {
-  return DAY_NAMES;
+  if (CalendarDB._dayNames) {
+    return CalendarDB._dayNames;
+  }
+  let counter = new Date(),
+      dateOffset = counter.getDay(),
+      locale = CalendarDB.getNavigatorLanguage(),
+      formatter = new Intl.DateTimeFormat(locale, { weekday: 'long' }),
+      names = [];
+
+  counter.setDate(counter.getDate() - dateOffset);
+  do {
+    names.push(formatter.format(counter));
+    counter.setDate(counter.getDate() + 1);
+  } while(counter.getDay() !== 0);
+  CalendarDB._dayNames = names;
+  return names;
+};
+
+CalendarDB.getNavigatorLanguage = function() {
+  if (navigator.languages && navigator.languages.length) {
+    return navigator.languages[0];
+  } else {
+    return navigator.userLanguage || navigator.language || navigator.browserLanguage || 'en';
+  }
 };
 
 CalendarDB.getDateAsStr = function(date) {
