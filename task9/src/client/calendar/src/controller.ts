@@ -1,8 +1,26 @@
-function Day(number, weekDay, month, year) {
-  this.number = number;
-  this.weekDay = weekDay;
-  this.month = month;
-  this.year = year;
+class Day {
+  public constructor(
+    private _number: number,
+    private _weekDay: number,
+    private _month: number,
+    private _year: number
+  ) {}
+
+  get number() {
+    return this._number;
+  }
+
+  get weekDay() {
+    return this._weekDay;
+  }
+
+  get month() {
+    return this._month;
+  }
+
+  get year() {
+    return this._year;
+  }
 }
 
 function CalendarController() {
