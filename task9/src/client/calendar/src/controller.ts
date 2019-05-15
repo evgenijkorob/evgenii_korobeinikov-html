@@ -23,40 +23,40 @@ class Day {
   }
 }
 
-function CalendarController() {
-  this.db = new CalendarDB();
-  this.view = new CalendarRenderer(this.db);
-}
+class CalendarController {
+  private _db: CalendarDB;
+  private _view: CalendarRenderer;
 
-CalendarController.prototype = {
-  constructor: CalendarController,
+  public constructor() {
+    this._db = new CalendarDB();
+    this._view = new CalendarRenderer(this._db);
+  }
 
-  showCalendar: function() {
-    let calendarView;
-    this.db.dayList = this.generateMonthDaysArr(this.db.chosenDate);
-    calendarView = this.view.render();
-    this.setHandlers(calendarView);
-    this.configWeather();
-    this.runTodayDateAutoupdater();
+  public showCalendar(): HTMLElement {
+    let calendarView: HTMLElement;
+    this._db.dayList = this._generateMonthDaysArr(this._db.chosenDate);
+    calendarView = this._view.render();
+    this._setHandlers(calendarView);
+    this._configWeather();
+    this._runTodayDateAutoupdater();
     return calendarView;
-  },
+  }
 
-  runTodayDateAutoupdater: function() {
-    let timer;
-    timer = setTimeout(function updater() {
+  private _runTodayDateAutoupdater(): void {
+    let timer: number = setTimeout(function updater() {
       let newDate = new Date();
-      if (!CalendarDB.isEqualDatesYMD(this.db.today, newDate)) {
-        this.db.today = newDate;
-        this.view.onTodayDateChange();
+      if (!CalendarDB.isEqualDatesYMD(this._db.today, newDate)) {
+        this._db.today = newDate;
+        this._view.onTodayDateChange();
       }
       timer = setTimeout(updater.bind(this), 60 * 1000);
     }.bind(this), 0);
-  },
+  }
 
-  generateMonthDaysArr: function(date) {
-    let list = [],
-        currMonth = date.getMonth(),
-        currYear = date.getFullYear(),
+  private _generateMonthDaysArr(date: Date): Day[] {
+    let list: Day[] = [],
+        currMonth: number = date.getMonth(),
+        currYear: number = date.getFullYear(),
         day = new Date(currYear, currMonth, 1);
     day.setDate(day.getDate() - 1);
 
@@ -76,35 +76,35 @@ CalendarController.prototype = {
       day.setDate(day.getDate() + 1);
     }
     return list;
-  },
+  }
 
-  setHandlers: function(calendar) {
-    calendar.addEventListener('mousedown', function(event) {
-      let target = event.target.closest('*[data-date-changer]');
+  private _setHandlers(calendar: HTMLElement): void {
+    calendar.addEventListener('mousedown', function(event: Event) {
+      let target: Element = (<Element>event.target).closest('*[data-date-changer]');
       if (!target) {
         return;
       }
-      let oldDate = this.db.chosenDate,
-          newDate = this.getNewDateFromElement(target, oldDate);
+      let oldDate: Date = this._db.chosenDate,
+          newDate: Date = this._getNewDateFromElement(target, oldDate);
       if (CalendarDB.isEqualDatesYMD(oldDate, newDate)) {
         return;
       }
-      let isYearChanged = newDate.getFullYear() !== oldDate.getFullYear(),
-          isMonthChanged = newDate.getMonth() !== oldDate.getMonth();
-      this.db.chosenDate = newDate;
+      let isYearChanged: boolean = newDate.getFullYear() !== oldDate.getFullYear(),
+          isMonthChanged: boolean = newDate.getMonth() !== oldDate.getMonth();
+      this._db.chosenDate = newDate;
       if (isYearChanged || isMonthChanged) {
-        this.db.dayList = this.generateMonthDaysArr(newDate);
+        this._db.dayList = this._generateMonthDaysArr(newDate);
       }
-      this.view.onChosenDateChange(oldDate);
+      this._view.onChosenDateChange(oldDate);
     }.bind(this));
-  },
+  }
 
-  getNewDateFromElement: function(node, oldDate) {
-    let newDate = new Date(oldDate),
-        yearSub = +node.getAttribute('data-year-sub'),
-        year = node.getAttribute('data-year'),
-        month = node.getAttribute('data-month'),
-        day = +node.getAttribute('data-day');
+  private _getNewDateFromElement(node: HTMLElement, oldDate: Date): Date {
+    let newDate = new Date(oldDate.getMilliseconds()),
+        yearSub: number = +node.getAttribute('data-year-sub'),
+        year: number = +node.getAttribute('data-year'),
+        month: number = +node.getAttribute('data-month'),
+        day: number = +node.getAttribute('data-day');
     if (year) {
       newDate.setFullYear(year);
     }
@@ -121,36 +121,28 @@ CalendarController.prototype = {
       newDate.setDate(oldDate.getDate());
     }
     return newDate;
-  },
-
-  configWeather: function() {
-    let weatherProvider = new WeatherService();
-    weatherProvider.onWeatherGet = this.onWeatherGet.bind(this);
-    weatherProvider.onForecastGet = this.onForecastGet.bind(this);
-    weatherProvider.start();
-  },
-
-  onWeatherGet: function(data) {
-    if (!data) {
-      this.db.todayWeather = undefined;
-      this.view.updateWeatherDisplay();
-      return;
-    }
-    this.db.todayWeather = data.weather;
-    this.db.city = data.city;
-    this.db.country = data.country;
-    this.view.updateWeatherDisplay();
-  },
-
-  onForecastGet: function(data) {
-    if (!data) {
-      this.db.forecast = undefined;
-      this.view.updateWeatherDisplay();
-      return;
-    }
-    this.db.forecast = data.dayList;
-    this.db.city = data.city;
-    this.db.country = data.country;
-    this.view.updateWeatherDisplay();
   }
-};
+
+  private _configWeather(): void {
+    let weatherProvider = new WeatherService(),
+        callback: (purpose: string, data: any) => void;
+    callback = function(purpose: string, data: any) {
+      this._db.city = data ? data.city : null;
+      this._db.country = data ? data.country : null;
+      switch(purpose) {
+        case 'weather':
+          this._db.todayWeather = data ? data.weather : null;
+          break;
+        case 'forecast':
+          this._db.forecast = data ? data.dayList : null;
+          break;
+        default:
+          throw new Error('Incorrect query purpose');
+      }
+      this._view.updateWeatherDisplay();
+    };
+    weatherProvider.onWeatherGet = callback.bind(this, 'weather');
+    weatherProvider.onForecastGet = callback.bind(this, 'forecast');
+    weatherProvider.start();
+  }
+}

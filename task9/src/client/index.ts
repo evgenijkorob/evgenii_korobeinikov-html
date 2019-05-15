@@ -1,1 +1,1 @@
-let calendar = new Calendar(document.body);
+let calendar: Calendar = new Calendar(document.body);
