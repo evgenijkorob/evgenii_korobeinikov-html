@@ -32,8 +32,8 @@ class CalendarController {
     this._view = new CalendarRenderer(this._db);
   }
 
-  public showCalendar(): HTMLElement {
-    let calendarView: HTMLElement;
+  public showCalendar(): Element {
+    let calendarView: Element;
     this._db.dayList = this._generateMonthDaysArr(this._db.chosenDate);
     calendarView = this._view.render();
     this._setHandlers(calendarView);
@@ -78,7 +78,7 @@ class CalendarController {
     return list;
   }
 
-  private _setHandlers(calendar: HTMLElement): void {
+  private _setHandlers(calendar: Element): void {
     calendar.addEventListener('mousedown', function(event: Event) {
       let target: Element = (<Element>event.target).closest('*[data-date-changer]');
       if (!target) {
@@ -100,11 +100,14 @@ class CalendarController {
   }
 
   private _getNewDateFromElement(node: HTMLElement, oldDate: Date): Date {
-    let newDate = new Date(oldDate.getMilliseconds()),
-        yearSub: number = +node.getAttribute('data-year-sub'),
-        year: number = +node.getAttribute('data-year'),
-        month: number = +node.getAttribute('data-month'),
-        day: number = +node.getAttribute('data-day');
+    let newDate = new Date(oldDate.toString()),
+        getNumberFromAttr = (attr: string): number => {
+          return node.hasAttribute(attr) ? Number(node.getAttribute(attr)) : null;
+        },
+        yearSub: number = getNumberFromAttr('data-year-sub'),
+        year: number = getNumberFromAttr('data-year'),
+        month: number = getNumberFromAttr('data-month'),
+        day: number = getNumberFromAttr('data-day');
     if (year) {
       newDate.setFullYear(year);
     }
@@ -124,17 +127,18 @@ class CalendarController {
   }
 
   private _configWeather(): void {
+    type WeatherObj = ICityInstantWeather | ICityForecast;
     let weatherProvider = new WeatherService(),
-        callback: (purpose: string, data: any) => void;
-    callback = function(purpose: string, data: any) {
+        callback: (purpose: string, data: WeatherObj) => void;
+    callback = function(purpose: string, data: WeatherObj) {
       this._db.city = data ? data.city : null;
       this._db.country = data ? data.country : null;
       switch(purpose) {
         case 'weather':
-          this._db.todayWeather = data ? data.weather : null;
+          this._db.todayWeather = data;
           break;
         case 'forecast':
-          this._db.forecast = data ? data.dayList : null;
+          this._db.forecast = data;
           break;
         default:
           throw new Error('Incorrect query purpose');
