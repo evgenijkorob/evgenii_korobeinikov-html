@@ -4,9 +4,9 @@
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "../../prod/server"
+    "outDir": "./prod/server"
   },
   "include": [
-    "./**/*"
+    "./src/server/**/*"
   ]
 }

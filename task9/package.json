@@ -8,7 +8,7 @@
     "start": "node ./prod/server/server.js",
     "watch": "nodemon --watch ./prod/server",
     "compile":
-      "tsc --project ./tsconfig.json && tsc --project ./src/server/tsconfig.server.json"
+      "tsc --project ./tsconfig.client.json && tsc --project ./tsconfig.server.json"
   },
   "author": "",
   "license": "ISC",
