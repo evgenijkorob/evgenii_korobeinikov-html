@@ -1,58 +1,11 @@
-const path = require('path'),
-      express = require('express'),
-      rp = require('request-promise');
+import WeatherProvider from './weather-provider';
 
+export default class WeatherService {
+  private readonly _provider: WeatherProvider;
+  private static readonly _initialReqHeader: string = 'Initial-Weather-Request';
+  private _dataContainer;
+  private _subsContainer;
 
-class WeatherProvider {
-  constructor() {
-    this._defaultReqOptions = {
-      appid: 'ba7b3d5c9e11c5922d86715dbbc8ed28',
-      id: 625665,
-      units: 'metric',
-      lang: 'en'
-    };
-    this._address = 'https://api.openweathermap.org/data/2.5/';
-    this._addressPostfix = {
-      forecast: 'forecast',
-      weather: 'weather'
-    };
-    this._respObj = null;
-  }
-
-  getForecast() {
-    let options = {
-          uri: this._makeUrl(this._defaultReqOptions, this._addressPostfix.forecast)
-        };
-    return rp(options);
-  }
-
-  getWeather() {
-    let options = {
-          uri: this._makeUrl(this._defaultReqOptions, this._addressPostfix.weather)
-        };
-    return rp(options);
-  }
-
-  _makeUrl(optionsObj, postfix) {
-    let options = Object.entries(optionsObj),
-        url = this._address + postfix,
-        optAmount = options.length;
-    if (optAmount) {
-      url += '?';
-    }
-    options.forEach((option, indx) => {
-      let opt = option[0],
-          value = option[1];
-      url += opt + '=' + value;
-      if (indx < optAmount - 1) {
-        url += '&';
-      }
-    });
-    return url;
-  }
-}
-
-class WeatherService {
   constructor() {
     this._provider = new WeatherProvider();
     this._dataContainer = {
@@ -63,7 +16,6 @@ class WeatherService {
       'weather': {},
       'forecast': {}
     };
-    this._initialReqHeader = 'Initial-Weather-Request';
   }
 
   _makeSub(subReq, subRes, id, purpose) {
@@ -87,7 +39,7 @@ class WeatherService {
   _subscribe(purpose, subReq, subRes) {
     let id = Math.random();
     this._subsContainer[purpose][id] = this._makeSub(subReq, subRes, id, purpose);
-    if (subReq.header(this._initialReqHeader)) {
+    if (subReq.header(WeatherService._initialReqHeader)) {
       this._notify(id, purpose, purpose);
     }
   }
@@ -120,22 +72,19 @@ class WeatherService {
   }
 
   _setTimer(timeout, dataGetter, subContName, dataContName) {
-    let self = this,
-        timer;
-    function update() {
-      self._request(dataGetter.bind(self._provider), dataContName)
+    let timer: NodeJS.Timeout,
+        update: () => void;
+    update = () => {
+      this._request(dataGetter.bind(this._provider), dataContName)
         .then(() => new Promise(resolve => {
-          self._notifySubs(subContName, dataContName);
+          this._notifySubs(subContName, dataContName);
           resolve();
         }))
         .then(() => {
-          timer.id = setTimeout(update, timeout);
+          timer = setTimeout(update, timeout);
         });
-    }
-    update = update.bind(this);
-    timer = {
-      id: setTimeout(update, 0)
     };
+    timer = setTimeout(update, 0);
     return timer;
   }
 
@@ -170,30 +119,4 @@ class WeatherService {
     }
     delete this._subsContainer[subContName][id];
   }
-}
-
-const app = express(),
-      weatherService = new WeatherService(),
-      SITE_OPTIONS = {
-        portnum: 8080
-      };
-
-weatherService.start();
-
-app.use('/', express.static(
-  path.resolve(__dirname, '../client'),
-  SITE_OPTIONS
-));
-
-app.get('/api/weather/*', (req, res) => {
-  weatherService.subscribeForWeather(req, res);
-  return;
-});
-
-app.get('/api/forecast/*', (req, res) => {
-  weatherService.subscribeForForecast(req, res);
-  return;
-});
-
-app.listen(SITE_OPTIONS.portnum);
-console.log(`Running App on http://localhost:${SITE_OPTIONS.portnum}`);
+};

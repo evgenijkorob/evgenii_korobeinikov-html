@@ -43,13 +43,13 @@ class CalendarController {
   }
 
   private _runTodayDateAutoupdater(): void {
-    let timer: number = setTimeout(function updater() {
+    let timer: number = window.setTimeout(function updater() {
       let newDate = new Date();
       if (!CalendarDB.isEqualDatesYMD(this._db.today, newDate)) {
         this._db.today = newDate;
         this._view.onTodayDateChange();
       }
-      timer = setTimeout(updater.bind(this), 60 * 1000);
+      timer = window.setTimeout(updater.bind(this), 60 * 1000);
     }.bind(this), 0);
   }
 
