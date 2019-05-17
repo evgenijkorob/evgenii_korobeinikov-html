@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./prod/server/server.js",
     "watch": "nodemon --watch ./prod/server",
-    "compile": "tsc"
+    "compile": "tsc && tsc --project ./src/server/tsconfig.server.json"
   },
   "author": "",
   "license": "ISC",

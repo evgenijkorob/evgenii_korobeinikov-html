@@ -196,5 +196,4 @@ app.get('/api/forecast/*', (req, res) => {
 });
 
 app.listen(SITE_OPTIONS.portnum);
-console.log(`Running App on port ${SITE_OPTIONS.portnum}`);
-console.log(`http://localhost:${SITE_OPTIONS.portnum}`);
+console.log(`Running App on http://localhost:${SITE_OPTIONS.portnum}`);
