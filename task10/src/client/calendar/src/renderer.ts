@@ -1,3 +1,12 @@
+import { CalendarDB, IDateAsStr } from './db';
+import { Day } from './controller';
+import {
+  InstantWeather,
+  ICityForecast,
+  ICityInstantWeather,
+  IDayForecast
+} from './weather';
+
 const CALENDAR_CLASSES = {
   calendar: {
     tag: 'section',
@@ -178,7 +187,7 @@ const CALENDAR_CLASSES = {
   }
 }
 
-class CalendarRenderer {
+export default class CalendarRenderer {
   private _db: CalendarDB;
   private _model: Element;
 

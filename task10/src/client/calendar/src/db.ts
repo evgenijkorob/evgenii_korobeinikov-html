@@ -1,11 +1,14 @@
-interface IDateAsStr {
+import { ICityInstantWeather, ICityForecast } from './weather';
+import { Day } from './controller';
+
+export interface IDateAsStr {
   day: string,
   weekDay: string,
   month: string,
   year: string
 };
 
-class CalendarDB {
+export class CalendarDB {
   public today: Date;
   public chosenDate: Date;
   public dayList: Day[];

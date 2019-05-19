@@ -2,9 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "./prod/server"
+    "moduleResolution": "node"
   },
   "include": [
     "./src/server/**/*"

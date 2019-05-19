@@ -1,4 +1,6 @@
-class InstantWeather {
+import { CalendarDB } from './db';
+
+export class InstantWeather {
   constructor(
     public readonly date: Date,
     public readonly temp: number,
@@ -16,19 +18,19 @@ class InstantWeather {
   }
 }
 
-interface ICityInstantWeather {
+export interface ICityInstantWeather {
   city: String,
   country: String,
   weather: InstantWeather
 };
 
-interface ICityForecast {
+export interface ICityForecast {
   city: String,
   country: String,
   dayList: IDayForecast[]
 };
 
-interface IDayForecast {
+export interface IDayForecast {
   day: Date,
   forecast: InstantWeather[]
 };
@@ -79,7 +81,7 @@ class CometListener {
   }
 }
 
-class WeatherService {
+export class WeatherService {
   public onWeatherGet;
   public onForecastGet;
 

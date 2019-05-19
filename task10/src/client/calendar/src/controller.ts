@@ -1,4 +1,12 @@
-class Day {
+import { CalendarDB } from './db';
+import CalendarRenderer from './renderer';
+import {
+  ICityForecast,
+  ICityInstantWeather,
+  WeatherService
+} from './weather';
+
+export class Day {
   public constructor(
     private _number: number,
     private _weekDay: number,
@@ -23,7 +31,7 @@ class Day {
   }
 }
 
-class CalendarController {
+export default class CalendarController {
   private _db: CalendarDB;
   private _view: CalendarRenderer;
 

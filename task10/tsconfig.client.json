@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "./prod/client",
     "allowJs": true,
     "target": "es5"
   },
