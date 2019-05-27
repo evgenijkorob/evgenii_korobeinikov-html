@@ -1,0 +1,26 @@
+tr {
+  cursor: pointer;
+
+  &.selected {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+table {
+  border-spacing: 0;
+}
+
+td, th {
+  padding: 12px;
+}
+
+th {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0);
+  text-align: left;
+
+  &.sorted {
+    border-color: cyan;
+  }
+}

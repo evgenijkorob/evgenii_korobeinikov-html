@@ -26,6 +26,7 @@ export class JournalComponent implements OnInit {
   public sortingBy: SortBy;
   public readonly SortType = SortType;
   public sortingType: SortType;
+  public selectedRecordId: string;
 
   private _journal: StorageJournal;
 
@@ -37,6 +38,10 @@ export class JournalComponent implements OnInit {
     this._journal = new StorageJournal();
     this._productProvider.fetchDataToJournal(this._journal);
     this.records = this._journal.records;
+  }
+
+  select(id: string) {
+    this.selectedRecordId = id;
   }
 
   sort(by: SortBy): void {

@@ -2,14 +2,16 @@
   <thead>
     <tr>
       <th>#</th>
-      <th (click)="sort(SortBy.Tag)">tag</th>
-      <th (click)="sort(SortBy.Name)">name</th>
-      <th (click)="sort(SortBy.Price)">price</th>
-      <th (click)="sort(SortBy.Amount)">amount</th>
+      <th [class.sorted]="sortingBy === SortBy.Tag" (click)="sort(SortBy.Tag)">tag</th>
+      <th [class.sorted]="sortingBy === SortBy.Name" (click)="sort(SortBy.Name)">name</th>
+      <th [class.sorted]="sortingBy === SortBy.Price" (click)="sort(SortBy.Price)">price</th>
+      <th [class.sorted]="sortingBy === SortBy.Amount" (click)="sort(SortBy.Amount)">amount</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let record of records; let i = index">
+    <tr [class.selected]="selectedRecordId === record.id"
+      *ngFor="let record of records; let i = index"
+      (click)="select(record.id)">
       <td>{{i + 1}}</td>
       <td>{{record.product.tag}}</td>
       <td>{{record.product.name}}</td>
