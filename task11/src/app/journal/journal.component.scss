@@ -19,6 +19,7 @@ th {
   border-style: solid;
   border-color: rgba(0, 0, 0, 0);
   text-align: left;
+  text-transform: capitalize;
 
   &.sorted {
     border-color: cyan;

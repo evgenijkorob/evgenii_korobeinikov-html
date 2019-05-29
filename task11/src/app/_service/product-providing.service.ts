@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { IProduct } from "../_model/product";
-import { StorageJournal } from "../_model/journal";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductProvidingService {
 
-  constructor() {
+  constructor(
+  ) {
     this._generate();
   }
 
-  public fetchDataToJournal(journal: StorageJournal): void {
+  public fetchData(): IProduct[] {
     let data: IProduct[] = this._generate();
-    data.forEach(elem => journal.addProduct(elem));
+    return data;
   }
 
   private _generate(): IProduct[] {

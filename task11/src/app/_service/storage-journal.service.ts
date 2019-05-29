@@ -1,4 +1,6 @@
-import { IProduct } from "./product";
+import { Injectable } from '@angular/core';
+import { IProduct } from '../_model/product';
+import { ProductProvidingService } from './product-providing.service';
 
 export interface IStorageJournalRecord {
   id: string,
@@ -9,11 +11,22 @@ export interface IJournal {
   [id: string]: IStorageJournalRecord
 }
 
-export class StorageJournal {
+@Injectable({
+  providedIn: 'root'
+})
+export class StorageJournalService {
+
   private _records: IJournal = {};
 
   public get records() {
     return Object.values(this._records);
+  }
+
+  constructor(private _dataProvider: ProductProvidingService) {}
+
+  public fetchData(): void {
+    let data: IProduct[] = this._dataProvider.fetchData();
+    data.forEach(prod => this.addProduct(prod));
   }
 
   public addProduct(product: IProduct): void {
@@ -78,4 +91,5 @@ export class StorageJournal {
     } while(this.getRecord(id));
     return id;
   }
+
 }

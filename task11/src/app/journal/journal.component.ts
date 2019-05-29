@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageJournal, IStorageJournalRecord } from "../_model/journal";
-import { ProductProvidingService } from "../_service/product-providing.service";
+import { StorageJournalService, IStorageJournalRecord } from '../_service/storage-journal.service';
 
 enum SortBy {
   Tag,
@@ -28,15 +27,12 @@ export class JournalComponent implements OnInit {
   public sortingType: SortType;
   public selectedRecordId: string;
 
-  private _journal: StorageJournal;
-
   constructor(
-    private _productProvider: ProductProvidingService
+    private _journal: StorageJournalService
   ) { }
 
   ngOnInit() {
-    this._journal = new StorageJournal();
-    this._productProvider.fetchDataToJournal(this._journal);
+    this._journal.fetchData();
     this.records = this._journal.records;
   }
 
