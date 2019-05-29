@@ -8,12 +8,14 @@ import { JournalComponent } from './journal/journal.component';
 
 import { ProductProvidingService } from "./_service/product-providing.service";
 import { StorageJournalService } from "./_service/storage-journal.service";
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    JournalComponent
+    JournalComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
