@@ -32,8 +32,9 @@ export class JournalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._journal.fetchData();
-    this.records = this._journal.records;
+    this._journal.fetchData().then(() => {
+      this.records = this._journal.records;
+    });
   }
 
   select(id: string) {

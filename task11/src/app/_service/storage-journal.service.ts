@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IProduct } from '../_model/product';
-import { ProductProvidingService } from './product-providing.service';
+import { ProductProvidingService, IServerResponse } from './product-providing.service';
 
 export interface IStorageJournalRecord {
   id: string,
@@ -24,9 +24,13 @@ export class StorageJournalService {
 
   constructor(private _dataProvider: ProductProvidingService) {}
 
-  public fetchData(): void {
-    let data: IProduct[] = this._dataProvider.fetchData();
-    data.forEach(prod => this.addProduct(prod));
+  public fetchData(): Promise<void> {
+    return this._dataProvider
+      .fetchData()
+      .then(products => {
+        products.forEach(prod => this.addProduct(prod));
+        return Promise.resolve();
+      });
   }
 
   public addProduct(product: IProduct): void {

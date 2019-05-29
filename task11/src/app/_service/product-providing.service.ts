@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
 import { IProduct } from "../_model/product";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from 'rxjs';
+import { map } from "rxjs/operators";
+
+export interface IServerResponse {
+  productList: IProduct[]
+};
 
 @Injectable({
   providedIn: 'root'
@@ -7,26 +14,16 @@ import { IProduct } from "../_model/product";
 export class ProductProvidingService {
 
   constructor(
-  ) {
-    this._generate();
+    private _http: HttpClient
+  ) {}
+
+  public fetchData(): Promise<IProduct[]> {
+    return this._http
+      .get('assets/products.json')
+      .pipe(map((data: IServerResponse) => {
+        return data.productList;
+      }))
+      .toPromise();
   }
 
-  public fetchData(): IProduct[] {
-    let data: IProduct[] = this._generate();
-    return data;
-  }
-
-  private _generate(): IProduct[] {
-    let result: IProduct[] = [];
-    for (let i = 1; i <= 10; i++) {
-      let elem: IProduct = {
-        tag: Math.floor(Math.random() * 1000000),
-        name: `Name${i}`,
-        amount: i,
-        price: i * 10
-      };
-      result.push(elem);
-    }
-    return result;
-  }
 }
