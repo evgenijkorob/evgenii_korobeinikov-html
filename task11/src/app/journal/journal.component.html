@@ -17,6 +17,15 @@
       <td>{{record.product.name}}</td>
       <td>{{record.product.price}}</td>
       <td>{{record.product.amount}}</td>
+      <div class="record-menu-container"
+        *ngIf="selectedRecordId === record.id">
+        <div class="record-menu">
+          <i class="record-menu-item fas fa-link"></i>
+          <i class="record-menu-item fas fa-pen"></i>
+          <i class="record-menu-item fas fa-trash-alt"
+            (click)="delete(record.id)"></i>
+        </div>
+      </div>
     </tr>
   </tbody>
 </table>

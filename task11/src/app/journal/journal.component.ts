@@ -41,6 +41,11 @@ export class JournalComponent implements OnInit {
     this.selectedRecordId = id;
   }
 
+  delete(id: string): void {
+    this._journal.removeProduct(id);
+    this.records = this._journal.records;
+  }
+
   sort(by: SortBy): void {
     this._resolveSortWay(by);
     this.records = this.records.sort((a, b) => {

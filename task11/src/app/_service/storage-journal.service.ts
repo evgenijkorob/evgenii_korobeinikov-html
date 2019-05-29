@@ -43,7 +43,7 @@ export class StorageJournalService {
   }
 
   public removeProduct(id: string): void {
-    if (this.getRecord(id)!) {
+    if (this.getRecord(id) === null) {
       return;
     }
     delete this._records[id];
