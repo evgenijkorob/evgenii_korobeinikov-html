@@ -40,6 +40,9 @@ export class JournalComponent implements OnInit, OnDestroy {
     this._dataChangeSub = this._journal.dataChangeWatcher
       .subscribe((records: IStorageJournalRecord[]) => {
         this.records = records;
+        if (this.records && this.sortingBy !== undefined) {
+          this.sort(this.sortingBy, this.sortingType);
+        }
       });
   }
 
@@ -67,8 +70,8 @@ export class JournalComponent implements OnInit, OnDestroy {
     this._journal.removeProduct(id);
   }
 
-  sort(by: SortBy): void {
-    this._resolveSortWay(by);
+  sort(by: SortBy, type?: SortType): void {
+    this._resolveSortWay(by, type);
     this.records = this.records.sort((a, b) => {
       let result: number;
       switch(this.sortingBy) {
@@ -93,11 +96,11 @@ export class JournalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _resolveSortWay(by: SortBy): void {
+  private _resolveSortWay(by: SortBy, type?: SortType): void {
     if (!this.sortingType || by !== this.sortingBy) {
       this.sortingType = this.SortType.Descending;
     }
-    else {
+    else if (!type) {
       this.sortingType *= -1;
     }
     this.sortingBy = by;

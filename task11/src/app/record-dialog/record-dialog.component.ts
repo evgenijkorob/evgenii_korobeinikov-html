@@ -49,7 +49,6 @@ export class RecordDialogComponent implements OnInit {
   public accept(): void {
     switch(this._purpose) {
       case 'add':
-        console.log(this.product);
         this._journal.addProduct(this.product);
         break;
       case 'edit':
