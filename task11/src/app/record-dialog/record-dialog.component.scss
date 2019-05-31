@@ -1,0 +1,40 @@
+.dialog-container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+
+  position: absolute;
+  top: 40%;
+  left: calc(50% - 200px);
+
+  width: 400px;
+
+  border-radius: 7px;
+
+  padding: 20px;
+  box-shadow: 0 0 5px #adadad;
+  box-sizing: border-box;
+
+  & .title {
+    align-self: center;
+    margin: 0 0 15px;
+  }
+
+  & .field {
+    display: flex;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+
+    input {
+      width: 70%;
+      font-size: 0.9rem;
+    }
+  }
+
+  & button {
+    align-self: center;
+  }
+}

@@ -20,8 +20,10 @@
       <div class="record-menu-container"
         *ngIf="selectedRecordId === record.id">
         <div class="record-menu">
-          <i class="record-menu-item fas fa-link"></i>
-          <i class="record-menu-item fas fa-pen"></i>
+          <i class="record-menu-item fas fa-link"
+            (click)="goToRecordPage(record.id)"></i>
+          <i class="record-menu-item fas fa-pen"
+            (click)="editRecord(record.id)"></i>
           <i class="record-menu-item fas fa-trash-alt"
             (click)="delete(record.id)"></i>
         </div>
@@ -29,3 +31,5 @@
     </tr>
   </tbody>
 </table>
+<button (click)="addRecord()">New Record</button>
+<router-outlet></router-outlet>

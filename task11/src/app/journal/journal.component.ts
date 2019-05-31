@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageJournalService, IStorageJournalRecord } from '../_service/storage-journal.service';
+import { Router } from '@angular/router';
 
 enum SortBy {
   Tag,
@@ -28,8 +29,9 @@ export class JournalComponent implements OnInit {
   public selectedRecordId: string;
 
   constructor(
-    private _journal: StorageJournalService
-  ) { }
+    private _journal: StorageJournalService,
+    private _router: Router
+  ) {}
 
   ngOnInit() {
     this._journal.fetchData().then(() => {
@@ -39,6 +41,18 @@ export class JournalComponent implements OnInit {
 
   select(id: string) {
     this.selectedRecordId = id;
+  }
+
+  editRecord(id: string) {
+    this._router.navigate(['/edit', id]);
+  }
+
+  addRecord() {
+    this._router.navigate(['/add']);
+  }
+
+  goToRecordPage(id: string) {
+    this._router.navigate(['/view', id]);
   }
 
   delete(id: string): void {

@@ -7,7 +7,7 @@ export interface IStorageJournalRecord {
   product: IProduct
 }
 
-export interface IJournal {
+interface IJournal {
   [id: string]: IStorageJournalRecord
 }
 
@@ -16,7 +16,7 @@ export interface IJournal {
 })
 export class StorageJournalService {
 
-  private _records: IJournal = {};
+  private _records: IJournal = null;
 
   public get records() {
     return Object.values(this._records);
@@ -25,56 +25,42 @@ export class StorageJournalService {
   constructor(private _dataProvider: ProductProvidingService) {}
 
   public fetchData(): Promise<void> {
+    if (this._records) {
+      return Promise.resolve();
+    }
     return this._dataProvider
       .fetchData()
       .then(products => {
+        this._records = {};
         products.forEach(prod => this.addProduct(prod));
         return Promise.resolve();
       });
   }
 
   public addProduct(product: IProduct): void {
-    let id: string = this._generateId();
-    let newRecord: IStorageJournalRecord = {
-      id: id,
-      product: product
-    };
+    if (!product) {
+      return;
+    }
+    let id: string = this._generateId(),
+        newRecord: IStorageJournalRecord = {
+          id: id,
+          product: product
+        };
     this._records[id] = newRecord;
   }
 
   public removeProduct(id: string): void {
-    if (this.getRecord(id) === null) {
+    if (!this.getRecord(id)) {
       return;
     }
     delete this._records[id];
   }
 
-  public setProductTag(id: string, tag: number): void {
-    if (this.getRecord(id)!) {
+  public editRecord(id: string, prod: IProduct) {
+    if (!this.getRecord(id)) {
       return;
     }
-    this._records[id].product.tag = tag;
-  }
-
-  public setProductName(id: string, name: string): void {
-    if (this.getRecord(id)!) {
-      return;
-    }
-    this._records[id].product.name = name;
-  }
-
-  public setProductPrice(id: string, price: number): void {
-    if (this.getRecord(id)!) {
-      return;
-    }
-    this._records[id].product.price = price;
-  }
-
-  public setProductAmount(id: string, amount: number): void {
-    if (this.getRecord(id)!) {
-      return;
-    }
-    this._records[id].product.amount = amount;
+    this._records[id].product = prod;
   }
 
   public getRecord(id: string): IStorageJournalRecord {
