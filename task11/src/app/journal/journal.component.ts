@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StorageJournalService, IStorageJournalRecord } from '../_service/storage-journal.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 enum SortBy {
   Tag,
@@ -19,7 +20,7 @@ enum SortType {
   templateUrl: './journal.component.html',
   styleUrls: ['./journal.component.scss']
 })
-export class JournalComponent implements OnInit {
+export class JournalComponent implements OnInit, OnDestroy {
 
   public records: IStorageJournalRecord[];
   public readonly SortBy = SortBy;
@@ -28,15 +29,22 @@ export class JournalComponent implements OnInit {
   public sortingType: SortType;
   public selectedRecordId: string;
 
+  private _dataChangeSub: Subscription;
+
   constructor(
     private _journal: StorageJournalService,
     private _router: Router
   ) {}
 
   ngOnInit() {
-    this._journal.fetchData().then(() => {
-      this.records = this._journal.records;
-    });
+    this._dataChangeSub = this._journal.dataChangeWatcher
+      .subscribe((records: IStorageJournalRecord[]) => {
+        this.records = records;
+      });
+  }
+
+  ngOnDestroy() {
+    this._dataChangeSub.unsubscribe();
   }
 
   select(id: string) {
@@ -57,7 +65,6 @@ export class JournalComponent implements OnInit {
 
   delete(id: string): void {
     this._journal.removeProduct(id);
-    this.records = this._journal.records;
   }
 
   sort(by: SortBy): void {
