@@ -11,11 +11,6 @@ enum SortBy {
   Amount
 };
 
-enum SortType {
-  Descending = -1,
-  Ascending = 1
-};
-
 @Component({
   selector: 'app-journal',
   templateUrl: './journal.component.html',
@@ -26,8 +21,7 @@ export class JournalComponent implements OnInit, OnDestroy {
   public records: IStorageJournalRecord[];
   public readonly SortBy = SortBy;
   public sortingBy: SortBy;
-  public readonly SortType = SortType;
-  public sortingType: SortType;
+  public isDescendingSort: boolean;
   public selectedRecordId: string;
 
   private _dataChangeSub: Subscription;
@@ -42,7 +36,7 @@ export class JournalComponent implements OnInit, OnDestroy {
       .subscribe((records: IStorageJournalRecord[]) => {
         this.records = records;
         if (this.records && this.sortingBy !== undefined) {
-          this.sort(this.sortingBy, this.sortingType);
+          this.sort(this.sortingBy, this.isDescendingSort);
         }
       });
   }
@@ -71,8 +65,8 @@ export class JournalComponent implements OnInit, OnDestroy {
     this._journal.removeProduct(id);
   }
 
-  sort(by: SortBy, type?: SortType): void {
-    this._resolveSortWay(by, type);
+  sort(by: SortBy, isDescending?: boolean): void {
+    this._resolveSortWay(by, isDescending);
     this.records = this.records.sort((a, b) => {
       let result: number;
       switch(this.sortingBy) {
@@ -92,17 +86,19 @@ export class JournalComponent implements OnInit, OnDestroy {
         default:
           result = 0;
       }
-      result *= this.sortingType;
+      if (this.isDescendingSort) {
+        result *= -1;
+      }
       return result;
     });
   }
 
-  private _resolveSortWay(by: SortBy, type?: SortType): void {
-    if (!this.sortingType || by !== this.sortingBy) {
-      this.sortingType = this.SortType.Descending;
+  private _resolveSortWay(by: SortBy, isDescending?: boolean): void {
+    if (this.isDescendingSort === undefined || by !== this.sortingBy) {
+      this.isDescendingSort = true;
     }
-    else if (!type) {
-      this.sortingType *= -1;
+    else if (isDescending === undefined) {
+      this.isDescendingSort = !this.isDescendingSort;
     }
     this.sortingBy = by;
   }
