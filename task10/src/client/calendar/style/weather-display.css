@@ -1,0 +1,28 @@
+.weather-display__inner {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  padding: 1rem;
+}
+
+.weather-display_invisible {
+  display: none;
+}
+
+.weather-display__city {
+  padding: 1.5rem 2.8rem;
+  font-size: 2rem;
+}
+
+.weather-display__today-weather {
+  font-size: 1.3rem;
+}
+
+.weather-display__forecast {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0 3rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
