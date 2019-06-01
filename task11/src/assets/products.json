@@ -1,0 +1,22 @@
+{
+  "productList": [
+    {
+      "tag": 290699,
+      "name": "Xiaomi Redmi Note 3",
+      "price": 125,
+      "amount": 5
+    },
+    {
+      "tag": 100203,
+      "name": "Xiaomi Redmi 5X",
+      "price": 250,
+      "amount": 20
+    },
+    {
+      "tag": 231207,
+      "name": "Sony Xperia Z3",
+      "price": 65,
+      "amount": 1
+    }
+  ]
+}

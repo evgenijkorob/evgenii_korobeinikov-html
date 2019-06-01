@@ -1,0 +1,86 @@
+$blue: #0095ff;
+
+tr {
+  cursor: pointer;
+
+  &.selected {
+    background: $blue;
+    color: white;
+  }
+}
+
+table {
+  border-spacing: 0;
+  padding-right: 200px;
+}
+
+td, th {
+  padding: 12px;
+}
+
+th {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0);
+  text-align: left;
+  text-transform: capitalize;
+
+  &.sorted {
+    border-color: $blue;
+    color: $blue;
+  }
+}
+
+.record-menu-container {
+  position: relative;
+  cursor: default;
+}
+
+$record-menu-bg: #f1f1f1;
+
+.record-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 0px;
+  left: 15px;
+
+  height: 45px;
+  padding: 0 15px;
+
+  border-radius: 6px;
+  background: $record-menu-bg;
+  color: black;
+
+  &:before {
+    position: absolute;
+    top: 11px;
+    left: -10px;
+    display: block;
+    content: '';
+
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 11.5px 15px 11.5px 0;
+    border-color: transparent $record-menu-bg transparent transparent;
+  }
+}
+
+.record-menu-item {
+  cursor: pointer;
+
+  &:hover {
+    color: $blue;
+  }
+
+  &.fa-trash-alt:hover {
+    color: red;
+  }
+
+  & + & {
+    padding-left: 18px;
+  }
+}

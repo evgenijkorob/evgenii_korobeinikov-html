@@ -1,0 +1,35 @@
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th [class.sorted]="sortingBy === SortBy.Tag" (click)="sort(SortBy.Tag)">tag</th>
+      <th [class.sorted]="sortingBy === SortBy.Name" (click)="sort(SortBy.Name)">name</th>
+      <th [class.sorted]="sortingBy === SortBy.Price" (click)="sort(SortBy.Price)">price</th>
+      <th [class.sorted]="sortingBy === SortBy.Amount" (click)="sort(SortBy.Amount)">amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr [class.selected]="selectedRecordId === record.id"
+      *ngFor="let record of records; let i = index"
+      (click)="select(record.id)">
+      <td>{{i + 1}}</td>
+      <td>{{record.product.tag}}</td>
+      <td>{{record.product.name}}</td>
+      <td>{{record.product.price}}</td>
+      <td>{{record.product.amount}}</td>
+      <div class="record-menu-container"
+        *ngIf="selectedRecordId === record.id">
+        <div class="record-menu">
+          <i class="record-menu-item fas fa-link"
+            (click)="goToRecordPage(record.id)"></i>
+          <i class="record-menu-item fas fa-pen"
+            (click)="editRecord(record.id)"></i>
+          <i class="record-menu-item fas fa-trash-alt"
+            (click)="delete(record.id)"></i>
+        </div>
+      </div>
+    </tr>
+  </tbody>
+</table>
+<button (click)="addRecord()">New Record</button>
+<router-outlet></router-outlet>

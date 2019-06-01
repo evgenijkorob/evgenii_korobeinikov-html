@@ -1,0 +1,12 @@
+ul {
+  list-style: none;
+  font-size: 1.3rem;
+  padding: 0px;
+
+  width: 300px;
+
+  & li {
+    display: flex;
+    justify-content: space-between;
+  }
+}

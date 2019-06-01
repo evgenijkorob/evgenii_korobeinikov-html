@@ -1,0 +1,20 @@
+<div class="dialog-container">
+  <h3 class="title">{{title}}</h3>
+  <label class="field">
+    Tag
+    <input [(ngModel)]="product.tag" type="number">
+  </label>
+  <label class="field">
+    Name
+    <input [(ngModel)]="product.name" type="text">
+  </label>
+  <label class="field">
+    Price
+    <input [(ngModel)]="product.price" type="number">
+  </label>
+  <label class="field">
+    Amount
+    <input [(ngModel)]="product.amount" type="number">
+  </label>
+  <button (click)="accept()">Accept</button>
+</div>
