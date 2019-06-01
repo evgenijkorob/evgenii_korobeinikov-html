@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 import { IProduct } from '../_model/product';
 import { ProductProvidingService } from './product-providing.service';
 import { BehaviorSubject } from 'rxjs';
-
-export interface IStorageJournalRecord {
-  id: string,
-  product: IProduct
-}
+import { IStorageJournalRecord } from '../_model/stor-journal-rec';
 
 interface IJournal {
   [id: string]: IStorageJournalRecord

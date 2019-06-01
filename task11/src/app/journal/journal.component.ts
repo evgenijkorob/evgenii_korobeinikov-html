@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { StorageJournalService, IStorageJournalRecord } from '../_service/storage-journal.service';
+import { StorageJournalService } from '../_service/storage-journal.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { IStorageJournalRecord } from '../_model/stor-journal-rec';
 
 enum SortBy {
   Tag,

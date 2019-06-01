@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageJournalService, IStorageJournalRecord } from '../_service/storage-journal.service';
+import { StorageJournalService } from '../_service/storage-journal.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IStorageJournalRecord } from '../_model/stor-journal-rec';
 
 @Component({
   selector: 'app-record-details',
